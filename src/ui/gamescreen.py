@@ -1,8 +1,9 @@
 import tkinter as tk
-import basemodels
 import io
 import time
 from PIL import Image, ImageTk
+
+from . import basemodels
 
 
 class Fps:
