@@ -18,13 +18,18 @@ class Singleton:
 class AssetHandler(Singleton):
 
     @staticmethod
+    def open_image(asset: str):
+        return Image.open(AssetHandler.path('images', asset))
+
+
+    @staticmethod
     def open_asset(asset: str, image=True, mode='r'):
         if image:
             return Image.open(AssetHandler.path(asset))
 
     @staticmethod
-    def path(asset: str) -> str:
-        return os.path.join(BASE_PATH, asset)
+    def path(*assets: str) -> str:
+        return os.path.join(BASE_PATH, *assets)
 
 
 if __name__ == '__main__':

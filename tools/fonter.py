@@ -5,6 +5,7 @@ import os
 
 from engine.base_object import BaseObject
 from engine.sprite import Sprite
+from utils import AssetHandler
 
 
 BASE = os.path.dirname(os.path.dirname(__file__))
@@ -19,7 +20,9 @@ class App(tk.Tk):
 
     def __init__(self):
         super().__init__()
-        self.title('Insane Game')
+        self.title('Dragex')
+        self.logo = ImageTk.PhotoImage(AssetHandler.open_image('logo.png'))
+        self.iconphoto(False, self.logo)
 
         self.c = tk.Canvas(self, width=400, height=400)
 
@@ -38,4 +41,6 @@ class App(tk.Tk):
 
 if __name__ == '__main__':
     app = App()
+    from tkinter import font
+
     app.mainloop()

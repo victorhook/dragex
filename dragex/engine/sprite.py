@@ -21,7 +21,7 @@ class Sprite:
             canvas.coords(self._tag, x, y)
 
     def _get_image(self) -> ImageTk.PhotoImage:
-        image = AssetHandler.open_asset(self.source)
+        image = AssetHandler.open_image(self.source)
         image = image.resize((self.size.width, self.size.height))
         return ImageTk.PhotoImage(image)
 
