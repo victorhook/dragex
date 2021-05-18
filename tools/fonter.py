@@ -1,34 +1,41 @@
-from tkinter import *
-from tkinter import font
+import tkinter as tk
+from PIL import Image, ImageTk
+import sys
+import os
 
-root = Tk()
-root.title('Font Families')
-fonts=list(font.families())
-fonts.sort()
+from engine.base_object import BaseObject
+from engine.sprite import Sprite
 
-def populate(frame):
-    '''Put in the fonts'''
-    listnumber = 1
-    for item in fonts:
-        label = "listlabel" + str(listnumber)
-        label = Label(frame,text=item,font=(item, 16)).pack()
-        listnumber += 1
 
-def onFrameConfigure(canvas):
-    '''Reset the scroll region to encompass the inner frame'''
-    canvas.configure(scrollregion=canvas.bbox("all"))
+BASE = os.path.dirname(os.path.dirname(__file__))
+BASE = os.path.join(BASE, 'assets')
 
-canvas = Canvas(root, borderwidth=0, background="#ffffff")
-frame = Frame(canvas, background="#ffffff")
-vsb = Scrollbar(root, orient="vertical", command=canvas.yview)
-canvas.configure(yscrollcommand=vsb.set)
 
-vsb.pack(side="right", fill="y")
-canvas.pack(side="left", fill="both", expand=True)
-canvas.create_window((4,4), window=frame, anchor="nw")
+def get_image(asset: str) -> bytes:
+    return Image.open(os.path.join(BASE, asset))
 
-frame.bind("<Configure>", lambda event, canvas=canvas: onFrameConfigure(canvas))
 
-populate(frame)
+class App(tk.Tk):
 
-root.mainloop()
+    def __init__(self):
+        super().__init__()
+        self.title('Insane Game')
+
+        self.c = tk.Canvas(self, width=400, height=400)
+
+        self.obj = BaseObject(rel_x=100, rel_y=100, size=(32, 32))
+        self.sprite = Sprite(self.obj.pos_relative, self.obj.size, 'man.png')
+        self.sprite.draw(self.c)
+
+        self.c.pack()
+
+    def login(self):
+        pass
+
+    def destroy(self):
+        sys.exit(0)
+
+
+if __name__ == '__main__':
+    app = App()
+    app.mainloop()
