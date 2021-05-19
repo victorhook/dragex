@@ -1,18 +1,11 @@
 from PIL import Image
 import os
 
+from .singleton import Singleton
+
 
 BASE_PATH = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 BASE_PATH = os.path.join(BASE_PATH, 'assets')
-
-
-class Singleton:
-    _instance = None
-
-    def __new__(cls, *args, **kwargs):
-        if cls._instance is None:
-            cls._instance = super().__new__(cls)
-        return cls._instance
 
 
 class AssetHandler(Singleton):
@@ -32,8 +25,15 @@ class AssetHandler(Singleton):
         return os.path.join(BASE_PATH, *assets)
 
 
+class K(Singleton):
+    pass
+
+
 if __name__ == '__main__':
     ass1 = AssetHandler(1)
     ass2 = AssetHandler()
-
-    print(ass1.open_asset('man.png'))
+    k = K()
+    print(ass1)
+    print(ass2)
+    print(k)
+    print(ass1.open_image('man.png'))
