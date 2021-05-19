@@ -1,4 +1,3 @@
 class UiState:
-
-    def __init__(self):
-        self.state = None
+    LOGIN = 0
+    GAME = 1

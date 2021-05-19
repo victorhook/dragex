@@ -1,15 +1,24 @@
+import tkinter as tk
+
 import utils
 from .sprite import Sprite
+from .drawable import Drawable
 
 
-class BaseObject:
+def _get_default_size() -> utils.Size:
+    return utils.Size(1, 1)
 
-    def __init__(self, rel_x: int = 0, rel_y: int = 0,
+
+class BaseObject(Drawable):
+
+    __obj_id = 0
+
+    def __init__(self, name: str = None,
                  world_x: int = 0, world_y: int = 0,
-                 size: tuple = (8, 8)):
-        self.pos_relative = utils.RelativePosition(rel_x, rel_y)
-        self.pos_absolute = utils.WorldPosition(world_x, world_y)
-        self.size = utils.Size(*size)
+                 size: utils.Size = None):
+        self.name = _get_name(name)
+        self.position = utils.WorldPosition(world_x, world_y)
+        self.size = _get_default_size() if size is None else size
         self.visible = False
         self.sprites = []
         self.active_sprite: Sprite = None
@@ -19,3 +28,20 @@ class BaseObject:
 
     def get_sprites(self) -> list:
         return self.sprites
+
+    def draw(self, canvas: tk.Canvas) -> None:
+        if not self.visible:
+            # TODO : Remove this, debug only.
+            print('Not visible, not drawing')
+            return
+
+        self.active_sprite.draw(self.position, canvas)
+
+
+def _get_name(name: str) -> str:
+    if name is None:
+        # Create new default name.
+        name = f'Object {BaseObject.__obj_id}'
+        BaseObject.__obj_id += 1
+
+    return name
