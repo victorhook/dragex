@@ -1,7 +1,7 @@
 from . import base_object
 
 
-class Client(base_object.BaseObject):
+class Client:
 
     def __init__(self):
         pass
