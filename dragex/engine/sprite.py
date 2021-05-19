@@ -1,35 +1,55 @@
 import tkinter as tk
 from PIL import ImageTk
+from collections import namedtuple
 
-from utils import AssetHandler, Position, Size
+from utils import AssetHandler, Size, Position
+from .drawable import Drawable
+from utils import Settings
+
+
+Dimension = namedtuple('Dimension', ['width', 'height'])
+Coordinates = namedtuple('Coordinates', ['x', 'y'])
+
+
+def _game_size_to_pixel_dimenions(size: Size) -> Dimension:
+    """ Turns a game size into pixel dimensions.
+        Returns a tuple of (width, height).
+    """
+    width = size.width * Settings.GRID_SIZE
+    height = size.height * Settings.GRID_SIZE
+    return Dimension(width, height)
+
+
+def _game_position_to_pixel_coords(position: Position) -> Coordinates:
+    """ Turns game position, aka grid square position into
+        pixel coordinates.
+        Returns a tuple of (x, y).
+    """
+    x = position.x * Settings.GRID_SIZE + (Settings.GRID_SIZE / 2)
+    y = position.y * Settings.GRID_SIZE + (Settings.GRID_SIZE / 2)
+    return Coordinates(x, y)
+
+
+def _get_image(source: str, width: int, height: int) -> ImageTk.PhotoImage:
+    image = AssetHandler.open_image(source)
+    image = image.resize((width, height))
+    return ImageTk.PhotoImage(image)
 
 
 class Sprite:
 
-    def __init__(self, position: Position, size: Size, source: str):
-        self.position = position
-        self.size = size
+    def __init__(self, size: Size, source: str):
+        self.size = _game_size_to_pixel_dimenions(size)
         self.source = source
-        self.image = self._get_image()
+        self.image = _get_image(source, self.size.width, self.size.height)
         self._tag = None
 
-    def draw(self, canvas: tk.Canvas):
+    def draw(self, position: Position, canvas: tk.Canvas):
+        x, y = _game_position_to_pixel_coords(position)
         if self._tag is None:
-            self._tag = self._create_image_tag(canvas)
+            self._tag = self._create_image_tag(canvas, x, y)
         else:
-            x, y = self._coords()
             canvas.coords(self._tag, x, y)
 
-    def _get_image(self) -> ImageTk.PhotoImage:
-        image = AssetHandler.open_image(self.source)
-        image = image.resize((self.size.width, self.size.height))
-        return ImageTk.PhotoImage(image)
-
-    def _coords(self) -> tuple:
-        x = self.position.x / 2
-        y = self.position.y / 2
-        return x, y
-
-    def _create_image_tag(self, canvas: tk.Canvas) -> str:
-        x, y = self._coords()
+    def _create_image_tag(self, canvas: tk.Canvas, x: int, y: int) -> str:
         return canvas.create_image(x, y, image=self.image)
