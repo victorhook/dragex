@@ -1,3 +1,5 @@
+from collections import namedtuple
+from .settings import Settings
 
 
 class Position:
@@ -19,3 +21,14 @@ class WorldPosition(Position):
 
 class RelativePosition(Position):
     pass
+
+
+Grid = namedtuple('Grid', ['row', 'col'])
+
+
+def get_grid(y: int, x: int) -> Grid:
+    """ Returns the correct grid, given the x and y coordinates of the screen.
+    """
+    row = y // Settings.GRID_SIZE
+    col = x // Settings.GRID_SIZE
+    return Grid(row, col)
