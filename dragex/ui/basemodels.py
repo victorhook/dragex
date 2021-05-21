@@ -25,3 +25,9 @@ class Entry(tk.Entry):
 
     def __init__(self, master, **kwargs):
         super().__init__(master, **kwargs, **styles.entry)
+
+
+class CheckButton(tk.Checkbutton):
+
+    def __init__(self, master, **kwargs):
+        super().__init__(master, **kwargs)

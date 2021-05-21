@@ -1,7 +1,8 @@
 from utils import Grid
 from .gridmap import GridMap
 from .base_object import BaseObject, EmptyObject
-from queue import PriorityQueue
+
+from queue import PriorityQueue, Queue
 from dataclasses import dataclass
 
 
@@ -40,6 +41,28 @@ class Node:
 
     def __ge__(self, other):
         return self.f >= other.f
+
+
+class Path:
+
+    def __init__(self, src: Grid, dst: Grid, path: Queue):
+        self.src = src
+        self.dst = dst
+        self.path = path
+
+    def arrived(self) -> bool:
+        return self.path.empty()
+
+    def next(self) -> Grid:
+        return next(self)
+
+    def __iter__(self):
+        return self
+
+    def __next__(self) -> Grid:
+        if self.path.empty():
+            raise StopIteration
+        return self.path.get()
 
 
 class PathFinder:
@@ -113,15 +136,16 @@ class PathFinder:
             return False
         return old_n < new_n
 
-    def _build_path(self, end_node: Node) -> list:
-        path = []
+    def _build_path(self, end_node: Node) -> Path:
+        path = Queue()
         node = end_node
         while node.parent is not None:
-            path.append(node)
+            path.put(node)
             node = node.parent
-        return path
 
-    def find(self, gridmap: GridMap, src: Grid, dst: Grid) -> list:
+        return Path(self.src, self.dst, path)
+
+    def find(self, gridmap: GridMap, src: Grid, dst: Grid) -> Path:
         """ Finds a path from src to dst grid on the map.
             This methods uses A* to find the shortest path.
 

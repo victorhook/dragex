@@ -1,8 +1,8 @@
-from utils import Settings
+from utils import Settings, Singleton
 from .base_object import BaseObject
 
 
-class GridMap:
+class GridMap(Singleton):
 
     def __init__(self):
         self.length = Settings.GRID_AMMOUNT

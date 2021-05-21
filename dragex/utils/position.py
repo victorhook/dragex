@@ -14,6 +14,9 @@ class Position:
         self.y = y
         self.orienation = orienation
 
+    def get_grid(self):
+        return (self.x, self.y)
+
 
 class WorldPosition(Position):
     pass

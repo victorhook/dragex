@@ -11,7 +11,7 @@ def _get_default_size() -> utils.Size:
 
 class BaseObject(Drawable):
 
-    __obj_id = 0
+    _obj_id = 0
 
     def __init__(self, name: str = None,
                  world_x: int = 0, world_y: int = 0,
@@ -29,6 +29,19 @@ class BaseObject(Drawable):
     def get_sprites(self) -> list:
         return self.sprites
 
+    def get_grid(self) -> utils.Grid:
+        return utils.Grid(self.position.x, self.position.y)
+
+    def move(self, x: int, y: int) -> None:
+        self.position.x = x
+        self.position.y = y
+
+    def rotate(self, direction: int) -> None:
+        self.position.orienation = direction
+
+    def is_visible(self):
+        return self.visible
+
     def draw(self, canvas: tk.Canvas) -> None:
         if not self.visible:
             # TODO : Remove this, debug only.
@@ -41,7 +54,48 @@ class BaseObject(Drawable):
 def _get_name(name: str) -> str:
     if name is None:
         # Create new default name.
-        name = f'Object {BaseObject.__obj_id}'
-        BaseObject.__obj_id += 1
+        name = f'Object {BaseObject._obj_id}'
+        BaseObject._obj_id += 1
 
     return name
+
+
+class EmptyObject(BaseObject):
+    pass
+
+
+class TargetObject(BaseObject):
+    pass
+
+
+class WallObject(BaseObject):
+
+    def is_visible(self):
+        return True
+
+    def draw(self, canvas: tk.Canvas) -> None:
+        size = utils.Settings.GRID_SIZE
+        x = self.position.x*size + (size / 2)
+        y = self.position.y*size + (size / 2)
+        canvas.create_text(x, y, text='B', tag='path')
+
+
+class GridObject(BaseObject):
+
+    def __init__(self, node, *args, **kwargs):
+        self.node = node
+        super().__init__(*args, **kwargs)
+
+    def is_visible(self):
+        return True
+
+    def draw(self, canvas: tk.Canvas) -> None:
+        size = utils.Settings.GRID_SIZE
+        pad = size / 3.5
+
+        x = self.position.x*size + (size / 2)
+        y = self.position.y*size + (size / 2)
+
+        canvas.create_text(x-pad, y-pad, text=self.node.g, tag='path', fill='green')
+        canvas.create_text(x+pad, y-pad, text=self.node.h, tag='path', fill='red')
+        canvas.create_text(x, y, text=self.node.f, tag='path')
