@@ -31,3 +31,9 @@ class CheckButton(tk.Checkbutton):
 
     def __init__(self, master, **kwargs):
         super().__init__(master, **kwargs)
+
+
+class Slider(tk.Scale):
+
+    def __init__(self, master, **kwargs):
+        super().__init__(master, **kwargs, **styles.scale)

@@ -40,3 +40,12 @@ entry = {
     'insertbackground': colors['white'],
     'bd': 0,
 }
+
+scale = {
+    'font': (font, 16),
+    'fg': colors['white'],
+    'bg': colors['gray_dark'],
+    'highlightcolor': colors['gray_dark'],
+    'highlightbackground': colors['gray_dark'],
+    'bd': 0,
+}
