@@ -41,20 +41,47 @@ class ObjectController:
         self._step = 0
 
     def jump_to(self, grid: Grid) -> None:
+        """ Sets the object to the given grid. """
         self.pos.x = grid.col
         self.pos.y = grid.row
 
     def move(self, elapsed_time: float) -> None:
+        """
+            Moves the object 1 interpolation.
+
+            The position of an object is in forms of [y, x] or [row, col]
+            of a grid matrix.
+            This means each coordinate is discrete positions, aka integers.
+
+            To move between two different grids, the object interpolates, so
+            the y and x values are incremented by a size defined in the top
+            of the file.
+
+            This means that during movement, y and x positions are floating
+            values, and to ensure that the object get to the correct grids
+            and not overshooting, when the object is very close to being
+            positioned entirely within a grid, jump_to() is invoked,
+            to ensure concrete positions, inside each grid.
+        """
+
         if self.curr_path is None:
             return
 
         if self.arrived():
+            # We've arrive at the destination. Set concrete y, x positions.
             self.jump_to(self.curr_path.dst)
+            self.curr_path = None
+            self.next_grid = None
             return
+
         elif not self.interpolating and self._within_next_grid():
+            # We're within a grid, so we start interpolation, which means
+            # we will not update directions until we're within the grid.
             self.interpolating = True
             self.dist = self.pos.distance_to(self.next_grid)
+
         elif self._hit_next_grid():
+            # We're very close to the grid, jump to concrete y and x position.
             self.jump_to(self.next_grid)
             self.interpolating = False
             self.next_grid = self.curr_path.next()
@@ -62,25 +89,12 @@ class ObjectController:
         if not self.interpolating:
             self._update_directions()
 
+        # Update the positions.
         self.pos.x += self.vel.x * self.speed * elapsed_time
         self.pos.y += self.vel.y * self.speed * elapsed_time
 
-    def _update_directions(self) -> None:
-        self.set_direction()
-        self.set_velocity()
-        self.dist = self.pos.distance_to(self.next_grid)
-
-    def is_close_to_arrival(self) -> bool:
-        return self.pos.get_grid() == self.curr_path.dst
-
     def arrived(self) -> bool:
         return self.pos.distance_to(self.curr_path.dst) < ARRIVE_LIMIT
-
-    def _hit_next_grid(self) -> bool:
-        return self.pos.distance_to(self.next_grid) < ARRIVE_LIMIT
-
-    def _within_next_grid(self) -> bool:
-        return self.pos.get_grid() == self.next_grid
 
     def set_velocity(self) -> None:
         self.vel = self.dirs[self.pos.orientation]
@@ -118,3 +132,14 @@ class ObjectController:
             self.curr_path = path
             self.next_grid = self.curr_path.next()
             self._update_directions()
+
+    def _update_directions(self) -> None:
+        self.set_direction()
+        self.set_velocity()
+        self.dist = self.pos.distance_to(self.next_grid)
+
+    def _hit_next_grid(self) -> bool:
+        return self.pos.distance_to(self.next_grid) < ARRIVE_LIMIT
+
+    def _within_next_grid(self) -> bool:
+        return self.pos.get_grid() == self.next_grid
