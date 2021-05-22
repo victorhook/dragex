@@ -88,6 +88,12 @@ class ObjectController:
 
         if not self.interpolating:
             self._update_directions()
+        else:
+            dist = self.pos.distance_to(self.next_grid)
+            if dist > self.dist:
+                self._update_directions()
+                self.dist = dist
+
 
         # Update the positions.
         self.pos.x += self.vel.x * self.speed * elapsed_time
