@@ -14,6 +14,9 @@ class AssetHandler(Singleton):
     def open_image(asset: str):
         return Image.open(AssetHandler.path('images', asset))
 
+    @staticmethod
+    def open_sprite(asset: str):
+        return Image.open(AssetHandler.path('sprites', asset))
 
     @staticmethod
     def open_asset(asset: str, image=True, mode='r'):

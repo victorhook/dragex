@@ -1,3 +1,3 @@
 class Settings:
-    GRID_SIZE = 40
-    GRID_AMMOUNT = 20
+    GRID_SIZE = 32
+    GRID_AMMOUNT = 40
