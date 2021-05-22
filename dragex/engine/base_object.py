@@ -96,6 +96,6 @@ class GridObject(BaseObject):
         x = self.position.x*size + (size / 2)
         y = self.position.y*size + (size / 2)
 
-        canvas.create_text(x-pad, y-pad, text=self.node.g, tag='path', fill='green')
-        canvas.create_text(x+pad, y-pad, text=self.node.h, tag='path', fill='red')
-        canvas.create_text(x, y, text=self.node.f, tag='path')
+        #canvas.create_text(x-pad, y-pad, text=self.node.g, tag='path', fill='green')
+        #canvas.create_text(x+pad, y-pad, text=self.node.h, tag='path', fill='red')
+        canvas.create_text(x, y, text='X', tag='path')

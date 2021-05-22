@@ -8,6 +8,7 @@ class Renderer:
         self.controller = Controller()
         self.canvas = canvas
 
-    def render(self):
+    def render(self, elapsed_time: float) -> None:
         for obj in self.controller.get_visible_objects():
+            obj.update(elapsed_time)
             obj.draw(self.canvas)

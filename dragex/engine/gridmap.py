@@ -4,7 +4,7 @@ from .base_object import BaseObject
 
 class GridMap(Singleton):
 
-    def __init__(self):
+    def init(self):
         self.length = Settings.GRID_AMMOUNT
         self.map = [[0 for i in range(self.length)]
                     for i in range(self.length)]
@@ -37,3 +37,5 @@ class GridMap(Singleton):
 
     def __repr__(self):
         return str(self.map)
+
+

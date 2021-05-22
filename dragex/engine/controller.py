@@ -10,7 +10,7 @@ import utils
 
 class Controller(Singleton):
 
-    def __init__(self):
+    def init(self):
         self.character = Character('Hubert', world_x=10, world_y=10)
         self.character.visible = True
         self.character.active_sprite = Sprite(self.character.size, 'man.png')
@@ -18,23 +18,30 @@ class Controller(Singleton):
         self.gridmap = GridMap()
         self.pathfinder = PathFinder()
 
+    def reset(self):
+        self.character.ctrl.curr_path = None
+        self.character.ctrl.pos.x = 10
+        self.character.ctrl.pos.y = 10
+        self.character.ctrl.next_grid = 0
+        self.character.ctrl.vel = (0, 0)
+
     def right_button_press(self, key) -> None:
         target_grid = utils.get_grid(key.y, key.x)
         self.game_objects.append(WallObject(world_y=target_grid.row,
                                  world_x=target_grid.col))
 
     def left_button_press(self, key) -> None:
-        target_grid = utils.get_grid(key.y, key.x)
         self.gridmap.fill(self.game_objects)
-
+        target_grid = utils.get_grid(key.y, key.x)
         nodes = self.pathfinder.find(self.gridmap, self.character.get_grid(),
-                             target_grid)
+                                     target_grid)
         if nodes is None:
             return
 
         for node in nodes:
             self.game_objects.append(GridObject(node, world_y=node.row, world_x=node.col))
 
+        self.character.ctrl.set_target(target_grid)
         return
 
         self.character.move(*target_grid)

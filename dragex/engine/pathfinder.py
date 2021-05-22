@@ -2,7 +2,7 @@ from utils import Grid
 from .gridmap import GridMap
 from .base_object import BaseObject, EmptyObject
 
-from queue import PriorityQueue, Queue
+from queue import PriorityQueue, Queue, deque
 from dataclasses import dataclass
 
 
@@ -45,13 +45,13 @@ class Node:
 
 class Path:
 
-    def __init__(self, src: Grid, dst: Grid, path: Queue):
+    def __init__(self, src: Grid, dst: Grid, path: deque):
         self.src = src
         self.dst = dst
         self.path = path
 
     def arrived(self) -> bool:
-        return self.path.empty()
+        return len(self.path) == 0
 
     def next(self) -> Grid:
         return next(self)
@@ -60,9 +60,9 @@ class Path:
         return self
 
     def __next__(self) -> Grid:
-        if self.path.empty():
+        if len(self.path) == 0:
             raise StopIteration
-        return self.path.get()
+        return self.path.pop()
 
 
 class PathFinder:
@@ -137,10 +137,10 @@ class PathFinder:
         return old_n < new_n
 
     def _build_path(self, end_node: Node) -> Path:
-        path = Queue()
+        path = deque()
         node = end_node
         while node.parent is not None:
-            path.put(node)
+            path.append(Grid(node.row, node.col))
             node = node.parent
 
         return Path(self.src, self.dst, path)

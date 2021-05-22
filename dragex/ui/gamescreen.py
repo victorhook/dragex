@@ -42,11 +42,11 @@ class GameScreen(basemodels.Frame):
     def read_image(self) -> ImageTk.PhotoImage:
         return ImageTk.PhotoImage(self._buf)
 
-    def render(self):
+    def render(self, elapsed_time: float) -> None:
         if self._show_grids:
             self._render_gridmap()
 
-        self.renderer.render()
+        self.renderer.render(elapsed_time)
 
     def _render_gridmap(self):
         """ Renders the gridmap of the world to the screen.
