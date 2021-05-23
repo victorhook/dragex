@@ -1,6 +1,12 @@
-from dataclasses import dataclass
+from collections import namedtuple
+from typing import Dict, List
+import time
 
-from .sprite import Sprite
+from engine.sprite import Sprite, NullSprite
+from engine.base_object import BaseObject
+
+
+Transition = namedtuple('Transition', ['sprite', 'duration'])
 
 
 class Animation:
@@ -8,40 +14,68 @@ class Animation:
         between sprites.
     """
 
-    def __init__(self, replay=True):
+    def __init__(self,
+                 replay=True,
+                 frames: List[Transition] = []):
+
         self.replay = replay
-        self.current_frame = 0
-        self.sprites = []
+        self.frames = frames
+        self.index = 0
+        self.t0 = None
 
-    def get_duration(self) -> float:
-        time = 0
-        for transition in self.sprites:
-            time += transition.duration
-        return time
+    def get_sprite(self) -> Sprite:
+        return self.frames[self.index].sprite
 
-    def get_sprite(self, elapsed_time: float) -> Sprite:
-        current_transition = self.sprites[self.current_frame]
-        if elapsed_time > current_transition.duration:
-            sprite = self._next_sprite()
+    def update(self) -> None:
+        if self.t0 is None:
+            self.t0 = time.time()
         else:
-            sprite = current_transition.end
+            t1 = time.time()
+            dt = t1 - self.t0
 
-    def _next_sprite(self) -> Sprite:
-        if self.replay:
-            if self.current_frame == len(self.sprites):
-                self.current_frame = 0
-            else:
-                self.current_frame += 1
+            if dt > self.frames[self.index].duration:
+                self._next_frame()
+                self.t0 = t1
 
-        return self.sprites[self.current_frame].end
-
-    def _time_for_next_sprite(self) -> float:
-        pass
+    def _next_frame(self) -> None:
+        if self.index+1 == len(self.frames) and self.replay:
+            self.index = 0
+        else:
+            self.index += 1
 
 
-@dataclass
-class SpriteTransition:
-    """ A transition is a change from 1 sprite to another. """
-    start: Sprite
-    end: Sprite
-    duration: float
+class AnimationHandler:
+
+    def __init__(self, obj: BaseObject):
+        self._obj = obj
+        self._animations: Dict[str, Animation] = {}
+        self._curr_state = None
+
+    def set_state(self, state: str) -> bool:
+        if state not in self._animations:
+            raise RuntimeError(f'Failed to find state {state}')
+        self._curr_state = state
+
+    def add_animation(self, state: str, animation: Animation) -> None:
+        """ Adds an animation to the total animations, given
+            a state to identify when the animation is suppose to
+            be played.
+
+            state:     A string that names the given animation.
+            animation: The animation.
+        """
+        self._animations[state] = animation
+        # Set default state
+        if self._curr_state is None:
+            self._curr_state = state
+
+    def get_sprite(self) -> Animation:
+        """ Returns the current active animation sprite.
+            Returns none of there are no animations.
+        """
+        if self._curr_state is None:
+            return NullSprite()
+
+        anim = self._animations[self._curr_state]
+        anim.update()
+        return anim.get_sprite()

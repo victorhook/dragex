@@ -53,3 +53,9 @@ class Sprite:
 
     def _create_image_tag(self, canvas: tk.Canvas, x: int, y: int) -> str:
         return canvas.create_image(x, y, image=self.image)
+
+
+class NullSprite(Sprite):
+
+    def __init__(self):
+        super().__init__(Size(1, 1), 'null.png')
