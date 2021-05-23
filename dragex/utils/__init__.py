@@ -4,3 +4,4 @@ from .position import WorldPosition, RelativePosition, Position, Grid, get_grid,
 from .singleton import Singleton # noqa
 from .settings import Settings # noqa
 from .fps import Fps # noqa
+from .levels import Levels # noqa

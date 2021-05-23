@@ -13,21 +13,20 @@ class BaseObject(Drawable):
 
     _obj_id = 0
 
-    def __init__(self, name: str = None,
-                 world_x: int = 0, world_y: int = 0,
-                 size: utils.Size = None):
+    def __init__(self,
+                 name: str = None,
+                 desription: str = None,
+                 world_x: int = 0,
+                 world_y: int = 0,
+                 visible: bool = True,
+                 size: utils.Size = None,
+                 active_sprite: Sprite = None,
+                 ):
         self.name = _get_name(name)
         self.position = utils.WorldPosition(world_x, world_y)
         self.size = _get_default_size() if size is None else size
-        self.visible = False
-        self.sprites = []
-        self.active_sprite: Sprite = None
-
-    def add_sprite(self, sprite: Sprite) -> None:
-        self.sprites.append(sprite)
-
-    def get_sprites(self) -> list:
-        return self.sprites
+        self.visible = visible
+        self.active_sprite = active_sprite
 
     def get_grid(self) -> utils.Grid:
         return utils.Grid(self.position.x, self.position.y)
@@ -50,6 +49,12 @@ class BaseObject(Drawable):
 
         self.active_sprite.draw(self.position, canvas)
 
+    def on_left_click(self):
+        pass
+
+    def on_right_click(self):
+        pass
+
 
 def _get_name(name: str) -> str:
     if name is None:
@@ -70,15 +75,19 @@ class TargetObject(BaseObject):
 
 class WallObject(BaseObject):
 
-    def is_visible(self):
-        return True
+    def __init__(self, *args, **kwargs):
+        sprite = Sprite(utils.Size(1, 1), 'wall.png')
+        super().__init__(*args, name='Wall', visible=True,
+                         active_sprite=sprite, **kwargs)
 
-    def draw(self, canvas: tk.Canvas) -> None:
+    def draw2(self, canvas: tk.Canvas) -> None:
         size = utils.Settings.GRID_SIZE
         x = self.position.x*size + (size / 2)
         y = self.position.y*size + (size / 2)
         canvas.create_text(x, y, text='B', tag='path')
 
+    def on_left_click(self):
+        pass
 
 class GridObject(BaseObject):
 

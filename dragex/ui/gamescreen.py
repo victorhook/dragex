@@ -6,41 +6,49 @@ from PIL import Image, ImageTk
 from engine import Controller
 from . import basemodels
 from .renderer import Renderer
+from .chat import Chat
+from .inventory import Inventory
 from utils import Settings
 
 
 class GameScreen(basemodels.Frame):
 
-    def __init__(self, master, width=800, height=800):
+    def __init__(self, master):
         super().__init__(master)
         self.master = master
-        self.width = width
-        self.height = height
+        self.width = Settings.GRID_SIZE * Settings.GRID_AMMOUNT
+        self.height = Settings.GRID_SIZE * Settings.GRID_AMMOUNT
 
-        self.canvas = tk.Canvas(self, width=width, height=height)
-        self._buf = io.BytesIO()
-        self._img = None
-        self._tag = None
-        self._tag = self.canvas.create_image(self.width/2, self.height/2,
-                                             image=None)
+        inventory_width = 200
+
+        # Frame for inventory and game canvas
+        self.frame = basemodels.Frame(self)
+        self.canvas = tk.Canvas(self.frame, width=self.width,
+                                height=self.height)
+        self.chat = Chat(self.frame, width=self.width)
+
         self.canvas.pack()
+        self.chat.pack(fill=tk.X)
+
+        self.inventory = Inventory(self, width=inventory_width)
+
+        self.frame.pack(side='left')
+        self.inventory.pack(side='right')
 
         # Create renderer
         self.controller = Controller()
         self.renderer = Renderer(self.canvas)
 
         # Callbacks
+        self.canvas.bind('<Motion>', self._motion)
         self.canvas.bind('<Button-1>', self.controller.left_button_press)
         self.canvas.bind('<Button-3>', self.controller.right_button_press)
 
         self._show_grids = True
         self.grids = None
 
-    def update_buffer(self, data: Image):
-        self._buf = data
-
-    def read_image(self) -> ImageTk.PhotoImage:
-        return ImageTk.PhotoImage(self._buf)
+    def _motion(self, e):
+        print(self.canvas.find_overlapping(e.x, e.y, e.x, e.y))
 
     def render(self, elapsed_time: float) -> None:
         if self._show_grids:

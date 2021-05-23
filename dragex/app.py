@@ -1,6 +1,7 @@
 import tkinter as tk
 import sys
-from PIL import Image, ImageTk
+import time
+from PIL import ImageTk
 
 from engine import Controller
 
@@ -22,6 +23,7 @@ class App(tk.Tk):
         super().__init__()
         self.set_configs()
 
+        # UI
         self.state = self.start_state()
         self.frame = basemodels.Frame(self)
 
@@ -31,7 +33,6 @@ class App(tk.Tk):
 
         self.tools = Toolbox(self)
         self.tools.pack()
-
         self.frame.pack()
 
         # FPS
@@ -41,10 +42,21 @@ class App(tk.Tk):
         self._fps_lbl = basemodels.Label(self)
         self._fps_lbl.pack()
 
+        # Controller
         self.controller = Controller()
-        self.controller.gridmap
+        self.t0 = time.time()
 
+        self.hovered_item = None
+        self.selected_item = None
+
+        # Start rendering
         self.render()
+
+    def set_item_hover(self, item):
+        self.hovered_item = item
+
+    def set_item_select(self, item):
+        self.selected_item = item
 
     def start_state(self):
         return UiState.GAME
@@ -62,11 +74,20 @@ class App(tk.Tk):
 
     def render(self):
         self.fps.inc()
+        elapsed_time = self._get_elapsed_time()
+        #print(f'E: {int(elapsed_time*1000)} ms')
+
         self._fps_lbl.config(text=self.fps.read())
 
-        self.active_screen.render()
+        self.active_screen.render(elapsed_time)
 
         self.after(self._desired_fps, self.render)
+
+    def _get_elapsed_time(self) -> float:
+        t1 = time.time()
+        elapsed_time = t1 - self.t0
+        self.t0 = t1
+        return elapsed_time
 
     def login(self):
         pass

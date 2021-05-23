@@ -31,7 +31,7 @@ def _game_position_to_pixel_coords(position: Position) -> Coordinates:
 
 
 def _get_image(source: str, width: int, height: int) -> ImageTk.PhotoImage:
-    image = AssetHandler.open_image(source)
+    image = AssetHandler.open_sprite(source)
     image = image.resize((width, height))
     return ImageTk.PhotoImage(image)
 

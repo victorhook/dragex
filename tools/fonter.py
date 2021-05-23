@@ -16,6 +16,21 @@ def get_image(asset: str) -> bytes:
     return Image.open(os.path.join(BASE, asset))
 
 
+class ToolTip(tk.Frame):
+
+    def __init__(self, master, text: str):
+        super().__init__(master)
+        self.text = tk.Label(self, text=text)
+        self.text.pack()
+
+        self._is_visible = False
+        self.bind('<Leave>', self.leave)
+
+    def leave(self, e):
+        self._is_visible = False
+        self.pack_forget()
+
+
 class App(tk.Tk):
 
     def __init__(self):
@@ -24,13 +39,12 @@ class App(tk.Tk):
         self.logo = ImageTk.PhotoImage(AssetHandler.open_image('logo.png'))
         self.iconphoto(False, self.logo)
 
-        self.c = tk.Canvas(self, width=400, height=400)
+        tooltip = ToolTip(self, 'This is a tooltip')
 
-        self.obj = BaseObject(rel_x=100, rel_y=100, size=(32, 32))
-        self.sprite = Sprite(self.obj.pos_relative, self.obj.size, 'man.png')
-        self.sprite.draw(self.c)
+        self.l = tk.Label(self, text='Hello World!')
+        self.l.bind('<Enter>', lambda k: tooltip.pack())
+        self.l.pack()
 
-        self.c.pack()
 
     def login(self):
         pass
