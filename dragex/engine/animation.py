@@ -44,14 +44,27 @@ class Animation:
             self.index += 1
 
 
+class SingleSpriteAnimation(Animation):
+    """ Animation that only holds a single sprite, with no transitions. """
+
+    def __init__(self, sprite: Sprite):
+        self._sprite = sprite
+
+    def get_sprite(self) -> Sprite:
+        return self._sprite
+
+    def update(self) -> None:
+        pass
+
+
 class AnimationHandler:
 
     def __init__(self, obj: BaseObject):
         self._obj = obj
-        self._animations: Dict[str, Animation] = {}
+        self._animations: Dict[int, Animation] = {}
         self._curr_state = None
 
-    def set_state(self, state: str) -> bool:
+    def set_state(self, state: int) -> bool:
         if state not in self._animations:
             raise RuntimeError(f'Failed to find state {state}')
         self._curr_state = state

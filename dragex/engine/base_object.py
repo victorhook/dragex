@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter.constants import ACTIVE
 
 import utils
 from .sprite import Sprite
@@ -23,23 +24,21 @@ class BaseObject(Drawable):
                  active_sprite: Sprite = None,
                  ):
         self.name = _get_name(name)
+        self.desription = desription
         self.position = utils.WorldPosition(world_x, world_y)
         self.size = _get_default_size() if size is None else size
         self.visible = visible
         self.active_sprite = active_sprite
+        self._last_sprite = active_sprite
 
     def get_grid(self) -> utils.Grid:
         return utils.Grid(self.position.x, self.position.y)
 
-    def move(self, x: int, y: int) -> None:
-        self.position.x = x
-        self.position.y = y
-
-    def rotate(self, direction: int) -> None:
-        self.position.orienation = direction
-
     def is_visible(self):
         return self.visible
+
+    def set_active_sprite(self, sprite: Sprite) -> None:
+        self.active_sprite = sprite
 
     def draw(self, canvas: tk.Canvas) -> None:
         if not self.visible:
@@ -47,7 +46,13 @@ class BaseObject(Drawable):
             print('Not visible, not drawing')
             return
 
+        if (self.active_sprite is not self._last_sprite
+           and self._last_sprite is not None):
+            # Hide old sprite.
+            self._last_sprite.hide(canvas)
+            
         self.active_sprite.draw(self.position, canvas)
+        self._last_sprite = self.active_sprite
 
     def on_left_click(self):
         pass

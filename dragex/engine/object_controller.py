@@ -1,8 +1,9 @@
 from collections import namedtuple
 from utils import Position, Grid, Settings, Orientation
 
-from .pathfinder import PathFinder, Path
-from .gridmap import GridMap
+from engine.pathfinder import PathFinder, Path
+from engine.gridmap import GridMap
+from engine.object_state import NpcState
 
 
 Vec2 = namedtuple('Vec2', ['x', 'y'])
@@ -24,8 +25,10 @@ class ObjectController:
         Orientation.NW: Vec2(-1, -1)
     }
 
-    def __init__(self, pos: Position, speed: int = 10):
+    def __init__(self, pos: Position, state: NpcState, speed: int = 10):
         self.pos = pos
+        self.state = state
+
         self.vel = Vec2(0, 0)
         self.speed = speed
         self.path_finder = PathFinder()
@@ -70,6 +73,7 @@ class ObjectController:
         if self.arrived():
             # We've arrive at the destination. Set concrete y, x positions.
             self.jump_to(self.curr_path.dst)
+            self.state.set(NpcState.IDLE)
             self.curr_path = None
             self.next_grid = None
             return
@@ -135,6 +139,7 @@ class ObjectController:
         path = self.path_finder.find(GridMap(), self.pos.get_grid(), target)
 
         if path is not None:
+            self.state.set(NpcState.MOVING)
             self.curr_path = path
             self.next_grid = self.curr_path.next()
             self._update_directions()

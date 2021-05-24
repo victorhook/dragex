@@ -1,23 +1,34 @@
-from .character import Character
-from .sprite import Sprite
-from .gridmap import GridMap
-from .pathfinder import PathFinder
-from .base_object import GridObject, WallObject
+from engine.character import Character
+from engine.sprite import Sprite
+from engine.gridmap import GridMap
+from engine.pathfinder import PathFinder
+from engine.base_object import GridObject, WallObject
+from engine.animation import Animation, AnimationHandler, Transition, SingleSpriteAnimation # noqa
+from engine.object_state import NpcState
 
-from utils import Singleton, Settings
+from utils import Singleton, Settings, Size
 import utils
 
 
 class Controller(Singleton):
 
     def init(self):
-        self.character = Character('Hubert', world_x=10, world_y=10)
-        self.character.visible = True
-        self.character.active_sprite = Sprite(self.character.size, 'man.png')
+        self.character = Character('Hubert', 'Nisse', world_x=10, world_y=10)
+
+        sprite1 = Sprite(Size(1, 1), 'man.png')
+        sprite2 = Sprite(Size(1, 1), 'man2.png')
+        idle = SingleSpriteAnimation(sprite1)
+        moving = Animation(frames=[Transition(sprite1, .1),
+                                   Transition(sprite2, .1)])
+
+        self.character.anim_handler.add_animation(NpcState.IDLE, idle)
+        self.character.anim_handler.add_animation(NpcState.MOVING, moving)
+
         self.game_objects = [self.character]
         for i in range(8):
             self.game_objects.append(WallObject(world_x=8, world_y=2+i))
             self.game_objects.append(WallObject(world_x=12, world_y=2+i))
+
         self.gridmap = GridMap()
         self.pathfinder = PathFinder()
 
