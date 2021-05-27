@@ -6,6 +6,8 @@ from engine.base_object import GridObject, WallObject
 from engine.animation import Animation, AnimationHandler, Transition, SingleSpriteAnimation # noqa
 from engine.object_state import NpcState
 
+import npcs
+
 from utils import Singleton, Settings, Size
 import utils
 
@@ -18,13 +20,18 @@ class Controller(Singleton):
         sprite1 = Sprite(Size(1, 1), 'man.png')
         sprite2 = Sprite(Size(1, 1), 'man2.png')
         idle = SingleSpriteAnimation(sprite1)
-        moving = Animation(frames=[Transition(sprite1, .1),
-                                   Transition(sprite2, .1)])
+        moving = Animation(frames=[Transition(sprite1, .2),
+                                   Transition(sprite2, .2)])
 
         self.character.anim_handler.add_animation(NpcState.IDLE, idle)
         self.character.anim_handler.add_animation(NpcState.MOVING, moving)
 
         self.game_objects = [self.character]
+
+        goblin = npcs.Goblin()
+        goblin.ctrl.jump_to(utils.Grid(10, 12))
+        self.game_objects.append(goblin)
+
         for i in range(8):
             self.game_objects.append(WallObject(world_x=8, world_y=2+i))
             self.game_objects.append(WallObject(world_x=12, world_y=2+i))

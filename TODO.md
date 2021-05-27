@@ -1,1 +1,8 @@
-- [ ] 
+- [ ] Combat system
+- [ ] NPCS
+- [ ] Inventory
+- [ ] Hitpoints
+- [ ] Skills & levels
+- [ ] Chat system
+- [ ] Map loading
+- [ ] World

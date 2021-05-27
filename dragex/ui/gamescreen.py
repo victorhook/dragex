@@ -48,7 +48,8 @@ class GameScreen(basemodels.Frame):
         self.grids = None
 
     def _motion(self, e):
-        print(self.canvas.find_overlapping(e.x, e.y, e.x, e.y))
+        #print(self.canvas.find_overlapping(e.x, e.y, e.x, e.y))
+        pass
 
     def render(self, elapsed_time: float) -> None:
         if self._show_grids:

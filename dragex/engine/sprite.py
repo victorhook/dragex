@@ -3,6 +3,7 @@ from PIL import ImageTk
 from collections import namedtuple
 
 from utils import AssetHandler, Size, Position
+from utils.position import Orientation
 from .drawable import Drawable
 from utils import Settings
 
@@ -43,13 +44,37 @@ class Sprite:
         self.source = source
         self.image = _get_image(source, self.size.width, self.size.height)
         self._tag = None
+        self._hidden = False
+        self._orientation: Orientation = None
 
     def draw(self, position: Position, canvas: tk.Canvas):
         x, y = _game_position_to_pixel_coords(position)
-        if self._tag is None:
+
+        if (self._orientation is None
+           or position.orientation != self._orientation):
+            self._orientation = position.orientation
+            self._rotate_image()
+
+        elif self._tag is None:
             self._tag = self._create_image_tag(canvas, x, y)
         else:
             canvas.coords(self._tag, x, y)
+            if self._hidden:
+                self.show(canvas)
+
+    def _rotate_image(self) -> None:
+        #self._orientation
+        pass
+
+    def hide(self, canvas: tk.Canvas) -> None:
+        if self._tag:
+            canvas.itemconfigure(self._tag, state='hidden')
+            self._hidden = True
+
+    def show(self, canvas: tk.Canvas) -> None:
+        if self._tag:
+            canvas.itemconfigure(self._tag, state='normal')
+            self._hidden = False
 
     def _create_image_tag(self, canvas: tk.Canvas, x: int, y: int) -> str:
         return canvas.create_image(x, y, image=self.image)

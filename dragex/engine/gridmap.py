@@ -16,6 +16,7 @@ class GridMap(Singleton):
 
         for obj in game_objects:
             x, y = obj.position.x, obj.position.y
+            print(y, x)
             self[y, x] = obj
 
     def __getitem__(self, pos: tuple) -> BaseObject:
