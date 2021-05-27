@@ -46,12 +46,14 @@ class BaseObject(Drawable):
             print('Not visible, not drawing')
             return
 
+        self.active_sprite.draw(self.position, canvas)
+
         if (self.active_sprite is not self._last_sprite
            and self._last_sprite is not None):
             # Hide old sprite.
             self._last_sprite.hide(canvas)
-            
-        self.active_sprite.draw(self.position, canvas)
+            pass
+
         self._last_sprite = self.active_sprite
 
     def on_left_click(self):

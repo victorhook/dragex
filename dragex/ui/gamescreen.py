@@ -52,10 +52,14 @@ class GameScreen(basemodels.Frame):
         pass
 
     def render(self, elapsed_time: float) -> None:
+
         if self._show_grids:
-            self._render_gridmap()
+            #self._render_gridmap()
+            pass
 
         self.renderer.render(elapsed_time)
+        self.canvas.update_idletasks()
+
 
     def _render_gridmap(self):
         """ Renders the gridmap of the world to the screen.

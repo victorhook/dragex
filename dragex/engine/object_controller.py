@@ -7,9 +7,14 @@ from engine.object_state import NpcState
 
 
 Vec2 = namedtuple('Vec2', ['x', 'y'])
-STEPS_PER_GRID_SQUARE = 40
+STEPS_PER_GRID_SQUARE = 10
 STEP_SIZE = Settings.GRID_SIZE / STEPS_PER_GRID_SQUARE
 ARRIVE_LIMIT = 0.5
+
+
+"""
+    Moving 1 square takes 5 ticks.
+"""
 
 
 class ObjectController:

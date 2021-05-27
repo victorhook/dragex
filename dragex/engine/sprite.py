@@ -1,5 +1,5 @@
 import tkinter as tk
-from PIL import ImageTk
+from PIL import ImageTk, Image
 from collections import namedtuple
 
 from utils import AssetHandler, Size, Position
@@ -31,10 +31,10 @@ def _game_position_to_pixel_coords(position: Position) -> Coordinates:
     return Coordinates(x, y)
 
 
-def _get_image(source: str, width: int, height: int) -> ImageTk.PhotoImage:
+def _get_image(source: str, width: int, height: int) -> Image:
     image = AssetHandler.open_sprite(source)
     image = image.resize((width, height))
-    return ImageTk.PhotoImage(image)
+    return image
 
 
 class Sprite:
@@ -42,10 +42,22 @@ class Sprite:
     def __init__(self, size: Size, source: str):
         self.size = _game_size_to_pixel_dimenions(size)
         self.source = source
-        self.image = _get_image(source, self.size.width, self.size.height)
         self._tag = None
         self._hidden = False
         self._orientation: Orientation = None
+
+        self._raw_image = _get_image(source, self.size.width, self.size.height)
+        self._set_image(self._raw_image)
+
+    def _set_image(self, image: Image) -> None:
+        """ Sets the image to be displayed. """
+        self.image = ImageTk.PhotoImage(image)
+        self._tag = None
+
+    def _rotate(self, position: Position) -> None:
+        angle = position.get_rotation_angle()
+        image = self._raw_image.rotate(angle)
+        self._set_image(image)
 
     def draw(self, position: Position, canvas: tk.Canvas):
         x, y = _game_position_to_pixel_coords(position)
@@ -53,18 +65,14 @@ class Sprite:
         if (self._orientation is None
            or position.orientation != self._orientation):
             self._orientation = position.orientation
-            self._rotate_image()
+            self._rotate(position)
 
-        elif self._tag is None:
+        if self._tag is None:
             self._tag = self._create_image_tag(canvas, x, y)
         else:
             canvas.coords(self._tag, x, y)
             if self._hidden:
                 self.show(canvas)
-
-    def _rotate_image(self) -> None:
-        #self._orientation
-        pass
 
     def hide(self, canvas: tk.Canvas) -> None:
         if self._tag:

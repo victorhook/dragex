@@ -15,7 +15,7 @@ class AssetHandler(Singleton):
         return Image.open(AssetHandler.path('images', asset))
 
     @staticmethod
-    def open_sprite(asset: str):
+    def open_sprite(asset: str) -> Image:
         return Image.open(AssetHandler.path('sprites', asset))
 
     @staticmethod

@@ -25,7 +25,7 @@ class Npc(BaseObject):
                  **kwargs
                  ):
         super().__init__(name, description, **kwargs)
-        
+
         self.anim_handler = AnimationHandler(self)
         self.state: NpcState = NpcState(self.anim_handler)
         self.ctrl = ObjectController(self.position, self.state, speed)

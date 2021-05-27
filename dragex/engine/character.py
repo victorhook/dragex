@@ -8,7 +8,7 @@ from engine.npc import Npc
 class Character(Npc):
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, speed=5, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def draw(self, canvas: tk.Canvas) -> None:
         super().draw(canvas)

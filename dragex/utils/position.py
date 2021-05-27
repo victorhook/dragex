@@ -15,18 +15,6 @@ def get_grid(y: int, x: int) -> Grid:
     return Grid(row, col)
 
 
-positions = {
-    0: 'NW',
-    1: 'N',
-    2: 'NE',
-    3: 'E',
-    4: 'SE',
-    5: 'S',
-    6: 'SW',
-    7: 'W',
-}
-
-
 class Orientation:
     NW = 0
     N = 1
@@ -36,6 +24,29 @@ class Orientation:
     S = 5
     SW = 6
     W = 7
+
+
+positions = {
+    Orientation.NW: 'NW',
+    Orientation.N: 'N',
+    Orientation.NE: 'NE',
+    Orientation.E: 'E',
+    Orientation.SE: 'SE',
+    Orientation.S: 'S',
+    Orientation.SW: 'SW',
+    Orientation.W: 'W',
+}
+
+rotations = {
+    Orientation.NW: 45,
+    Orientation.N: 45,
+    Orientation.NE: 45,
+    Orientation.E: 45,
+    Orientation.SE: 45,
+    Orientation.S: 45,
+    Orientation.SW: 45,
+    Orientation.W: 45,
+}
 
 
 class Position:
@@ -53,6 +64,9 @@ class Position:
         x = grid.col
         y = grid.row
         return math.hypot(self.x - x, self.y - y)
+
+    def get_rotation_angle(self) -> int:
+        return rotations[self.orientation]
 
     def get_grid(self):
         return Grid(round(self.y), round(self.x))
