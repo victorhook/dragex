@@ -1,7 +1,7 @@
 from engine.animation import AnimationHandler
 
 
-class NpcState:
+class ObjectState:
     IDLE = 0
     MOVING = 1
     ATTACKING = 2

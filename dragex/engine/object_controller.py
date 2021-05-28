@@ -3,7 +3,7 @@ from utils import Position, Grid, Settings, Orientation
 
 from engine.pathfinder import PathFinder, Path
 from engine.gridmap import GridMap
-from engine.object_state import NpcState
+from engine.object_state import ObjectState
 
 
 Vec2 = namedtuple('Vec2', ['x', 'y'])
@@ -30,7 +30,7 @@ class ObjectController:
         Orientation.NW: Vec2(-1, -1)
     }
 
-    def __init__(self, pos: Position, state: NpcState, speed: int = 10):
+    def __init__(self, pos: Position, state: ObjectState, speed: int = 10):
         self.pos = pos
         self.state = state
 
@@ -78,7 +78,7 @@ class ObjectController:
         if self.arrived():
             # We've arrive at the destination. Set concrete y, x positions.
             self.jump_to(self.curr_path.dst)
-            self.state.set(NpcState.IDLE)
+            self.state.set(ObjectState.IDLE)
             self.curr_path = None
             self.next_grid = None
             return
@@ -144,7 +144,7 @@ class ObjectController:
         path = self.path_finder.find(GridMap(), self.pos.get_grid(), target)
 
         if path is not None:
-            self.state.set(NpcState.MOVING)
+            self.state.set(ObjectState.MOVING)
             self.curr_path = path
             self.next_grid = self.curr_path.next()
             self._update_directions()

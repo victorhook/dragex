@@ -2,8 +2,9 @@ import tkinter as tk
 from tkinter.constants import ACTIVE
 
 import utils
-from .sprite import Sprite
-from .drawable import Drawable
+from engine.sprite import Sprite
+from engine.drawable import Drawable
+from engine.interact import ExamineResponse, Action
 
 
 def _get_default_size() -> utils.Size:
@@ -56,10 +57,8 @@ class BaseObject(Drawable):
 
         self._last_sprite = self.active_sprite
 
-    def interract(self) -> InteractResponse:
+    def interract(self, action: Action) -> None:
         """ Interracts with the object.
-            Returns an InteractResponse, which the invoker
-            can use.
         """
         pass
 
@@ -68,7 +67,7 @@ class BaseObject(Drawable):
             Returns an ExamineResponse, which the invoker
             can use.
         """
-        pass
+
 
 def _get_name(name: str) -> str:
     if name is None:
@@ -103,6 +102,7 @@ class WallObject(BaseObject):
     def on_left_click(self):
         pass
 
+
 class GridObject(BaseObject):
 
     def __init__(self, node, *args, **kwargs):
@@ -114,7 +114,7 @@ class GridObject(BaseObject):
 
     def draw(self, canvas: tk.Canvas) -> None:
         size = utils.Settings.GRID_SIZE
-        pad = size / 3.5
+        #pad = size / 3.5
 
         x = self.position.x*size + (size / 2)
         y = self.position.y*size + (size / 2)

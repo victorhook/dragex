@@ -2,10 +2,10 @@ import tkinter as tk
 
 from engine.base_object import BaseObject, GridObject
 from engine.object_controller import ObjectController
-from engine.npc import Npc
+from engine.object_controllable import ControllableGameObject
 
 
-class Character(Npc):
+class Character(ControllableGameObject):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
