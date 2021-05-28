@@ -1,13 +1,12 @@
 import tkinter as tk
-import io
-import time
-from PIL import Image, ImageTk
 
 from engine import Controller
-from . import basemodels
-from .renderer import Renderer
-from .chat import Chat
-from .inventory import Inventory
+from engine.event_queue import EventQueue, EventType
+from ui import basemodels
+from ui.examine import Examine
+from ui.renderer import Renderer
+from ui.chat import Chat
+from ui.inventory import Inventory
 from utils import Settings
 
 
@@ -36,8 +35,9 @@ class GameScreen(basemodels.Frame):
         self.inventory.pack(side='right')
 
         # Create renderer
-        self.controller = Controller()
-        self.renderer = Renderer(self.canvas)
+        self.controller: Controller = Controller()
+        self.event_queue: EventQueue = EventQueue()
+        self.renderer: Renderer = Renderer(self.canvas)
 
         # Callbacks
         self.canvas.bind('<Motion>', self._motion)
@@ -48,10 +48,18 @@ class GameScreen(basemodels.Frame):
         self.grids = None
 
     def _motion(self, e):
-        #print(self.canvas.find_overlapping(e.x, e.y, e.x, e.y))
         pass
 
+    def _handle_event_queue(self):
+        event = self.event_queue.get()
+        if event is not None:
+            if event.event_type == EventType.EXAMINE_RESPONSE:
+                examine_popup = Examine(self, event.payload)
+                examine_popup.pack()
+                print('hey')
+
     def render(self, elapsed_time: float) -> None:
+        self._handle_event_queue()
 
         if self._show_grids:
             #self._render_gridmap()
@@ -59,7 +67,6 @@ class GameScreen(basemodels.Frame):
 
         self.renderer.render(elapsed_time)
         self.canvas.update_idletasks()
-
 
     def _render_gridmap(self):
         """ Renders the gridmap of the world to the screen.
