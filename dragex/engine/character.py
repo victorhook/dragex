@@ -1,7 +1,7 @@
 import tkinter as tk
 
-from .base_object import BaseObject, GridObject
-from .object_controller import ObjectController
+from engine.base_object import BaseObject, GridObject
+from engine.object_controller import ObjectController
 from engine.npc import Npc
 
 

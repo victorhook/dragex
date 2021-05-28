@@ -18,10 +18,11 @@ class Npc(BaseObject):
                  description: str,
                  speed: int = 1,
                  hp_max: int = 10,
-                 range: int = 1,
+                 attack_range: int = 1,
                  combat_type: int = Combat.MELEE,
                  max_damage: int = 1,
                  damage_freq: float = 0.3,
+                 aggresive: bool = False,
                  **kwargs
                  ):
         super().__init__(name, description, **kwargs)
@@ -32,8 +33,9 @@ class Npc(BaseObject):
 
         self.hp_max = hp_max
         self.hp = self.hp_max
-        self.range = range
+        self.range = attack_range
         self.combat_type = combat_type
+        self.aggresive = aggresive
         self.max_damage = max_damage
         self.damage_freq = damage_freq
 
@@ -66,3 +68,9 @@ class Npc(BaseObject):
     def update(self, elapsed_time: float) -> None:
         """ Updates any state/physics of the npc. """
         self.ctrl.move(elapsed_time)
+
+    def interract(self):
+        pass
+
+    def examine(self) -> ExamineResult:
+        pass

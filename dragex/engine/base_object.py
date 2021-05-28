@@ -56,12 +56,19 @@ class BaseObject(Drawable):
 
         self._last_sprite = self.active_sprite
 
-    def on_left_click(self):
+    def interract(self) -> InteractResponse:
+        """ Interracts with the object.
+            Returns an InteractResponse, which the invoker
+            can use.
+        """
         pass
 
-    def on_right_click(self):
+    def examine(self) -> ExamineResponse:
+        """ Examines the object.
+            Returns an ExamineResponse, which the invoker
+            can use.
+        """
         pass
-
 
 def _get_name(name: str) -> str:
     if name is None:
