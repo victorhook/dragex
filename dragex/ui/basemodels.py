@@ -6,7 +6,7 @@ from . import styles
 class Frame(tk.Frame):
 
     def __init__(self, master, **kwargs):
-        #kwargs.update(styles.frames)
+        kwargs.update(styles.frames)
         super().__init__(master, **kwargs)
 
 

@@ -15,11 +15,18 @@ class Examine(basemodels.Frame):
     def __init__(self, master, response: interact.ExamineResponse):
         super().__init__(master)
         options = []
+        width = 0
+        height = 0
         for option in response.options:
             opt = ExamineOption(self, option.title, option.action)
-            opt.pack()
+            opt.pack(anchor='w')
             options.append(opt)
 
-        opt = ExamineOption(self, 'asdasd', option.action)
-        opt.pack()
-        options.append(opt)
+            # Update frame dimensions.
+            width = max(width, opt.winfo_reqwidth())
+            height += opt.winfo_reqheight()
+
+        self.configure(width=width, height=height)
+        self.pack_propagate(0)
+        self.width = width
+        self.height = height

@@ -1,3 +1,4 @@
+from collections import namedtuple
 import tkinter as tk
 
 from engine import Controller
@@ -8,6 +9,17 @@ from ui.renderer import Renderer
 from ui.chat import Chat
 from ui.inventory import Inventory
 from utils import Settings
+
+
+class Cursor:
+
+    def __init__(self, x: int = 0, y: int = 0):
+        self.x = x
+        self.y = y
+
+    def __call__(self, x: int, y: int) -> None:
+        self.x = x
+        self.y = y
 
 
 class GameScreen(basemodels.Frame):
@@ -38,25 +50,44 @@ class GameScreen(basemodels.Frame):
         self.controller: Controller = Controller()
         self.event_queue: EventQueue = EventQueue()
         self.renderer: Renderer = Renderer(self.canvas)
+        self._cursor: Cursor = Cursor()
+        self._active_examine: Examine = None
 
         # Callbacks
         self.canvas.bind('<Motion>', self._motion)
-        self.canvas.bind('<Button-1>', self.controller.left_button_press)
-        self.canvas.bind('<Button-3>', self.controller.right_button_press)
+        self.canvas.bind('<Button-1>', self._left_click)
+        self.canvas.bind('<Button-3>', self._right_click)
 
         self._show_grids = True
         self.grids = None
 
     def _motion(self, e):
-        pass
+        self._cursor(e.x, e.y)
+
+    def _left_click(self, e) -> None:
+        self.controller.left_button_press(e)
+
+    def _right_click(self, e) -> None:
+        self.controller.right_button_press(e)
+
+    def _clear_old_examine(self) -> None:
+        if self._active_examine is not None:
+            self.canvas.delete(self._active_examine)
 
     def _handle_event_queue(self):
         event = self.event_queue.get()
         if event is not None:
             if event.event_type == EventType.EXAMINE_RESPONSE:
+                self._clear_old_examine()
+
                 examine_popup = Examine(self, event.payload)
-                examine_popup.pack()
-                print('hey')
+                x = self._cursor.x + examine_popup.width/2
+                y = self._cursor.y + examine_popup.height/2
+
+                self._active_examine = self.canvas.create_window(
+                                                        x,
+                                                        y,
+                                                        window=examine_popup)
 
     def render(self, elapsed_time: float) -> None:
         self._handle_event_queue()
