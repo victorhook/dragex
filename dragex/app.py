@@ -3,8 +3,9 @@ import sys
 import time
 from PIL import ImageTk
 
-from engine import Controller
 
+from engine import Controller
+from client import DragexClient
 from ui import styles
 from ui.gamescreen import GameScreen
 from ui.loginscreen import LoginScreen
@@ -19,9 +20,13 @@ class App(tk.Tk):
     WIDTH = 900
     HEIGHT = 800
 
-    def __init__(self):
+    def __init__(self,
+                 client: DragexClient
+                 ):
         super().__init__()
         self.set_configs()
+
+        self.client = client
 
         # UI
         self.state = self.start_state()
@@ -49,6 +54,9 @@ class App(tk.Tk):
         self.hovered_item = None
         self.selected_item = None
 
+        self.bind('<Key-s>', lambda e: self.client.start())
+        self.bind('<Key-q>', lambda e: self.client.stop())
+
         # Start rendering
         self.render()
 
@@ -75,7 +83,6 @@ class App(tk.Tk):
     def render(self):
         self.fps.inc()
         elapsed_time = self._get_elapsed_time()
-        #print(f'E: {int(elapsed_time*1000)} ms')
 
         self._fps_lbl.config(text=self.fps.read())
 
@@ -100,9 +107,8 @@ class App(tk.Tk):
         self.logo = ImageTk.PhotoImage(AssetHandler.open_image('logo.png'))
         self.iconphoto(False, self.logo)
         self.config(bg=styles.frames['bg'])
-        #self.geometry(f'{App.WIDTH}x{App.HEIGHT}')
 
 
 if __name__ == '__main__':
-    app = App()
+    app = App(DragexClient())
     app.mainloop()
