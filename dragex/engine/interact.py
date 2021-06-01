@@ -10,6 +10,13 @@ class Action:
     INTERACT = 4
 
 
+class Status:
+
+    def __init__(self, key: str, value: str):
+        self.key = key
+        self.value = value
+
+
 class Option:
     def __init__(self, title: str, action: int):
         self.title = title
