@@ -1,5 +1,6 @@
 from typing import List
 
+from client import DragexClient
 from engine.character import Character
 from engine.event_queue import EventQueue
 from engine.sprite import Sprite
@@ -9,10 +10,9 @@ from engine.base_object import BaseObject, GridObject, WallObject
 from engine.animation import Animation, AnimationHandler, Transition, SingleSpriteAnimation # noqa
 from engine.object_state import ObjectState
 from engine.npc import Npc
-
 import npcs
-from utils import Singleton, Settings, Size
 import utils
+from utils import Singleton, Settings, Size
 
 
 def is_player(obj: BaseObject) -> bool:
@@ -30,6 +30,8 @@ def is_friendly_npc(obj: BaseObject) -> bool:
 class Controller(Singleton):
 
     def init(self):
+        self.client = DragexClient()
+
         self.character = Character('Hubert', 'Nisse', speed=5, world_x=10, world_y=10)
 
         sprite1 = Sprite(Size(1, 1), 'man.png')
