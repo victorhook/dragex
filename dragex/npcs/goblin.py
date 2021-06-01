@@ -17,6 +17,6 @@ class Goblin(Npc):
 
     def __init__(self):
         load_sprite()
-        super().__init__('Goblin', 'A nasty little creature.')
+        super().__init__('Goblin', 'A nasty little creature.', hostile=True)
         self.anim_handler.add_animation(ObjectState.IDLE,
                                         SingleSpriteAnimation(_GOBLIN_SPRITE))
