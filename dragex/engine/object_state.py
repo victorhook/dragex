@@ -24,9 +24,11 @@ class ObjectState:
     def set(self, state: int) -> None:
         self._state = state
         self._anim_handler.set_state(self._state)
+        self._event_queue.add(interact.Status('state', str(self)))
+        print(self)
 
-        state_string = self._STATE_STRINGS[self._state]
-        self._event_queue.add(interact.Status('state', state_string))
+    def __repr__(self):
+        return self._STATE_STRINGS[self._state]
 
     def get(self) -> int:
         return self._state

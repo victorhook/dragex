@@ -1,5 +1,7 @@
-from utils import Settings, Singleton
+from utils import Settings, Singleton, Grid
 from .base_object import BaseObject
+
+from typing import List
 
 
 class GridMap(Singleton):
@@ -9,15 +11,17 @@ class GridMap(Singleton):
         self.map = [[0 for i in range(self.length)]
                     for i in range(self.length)]
 
-    def fill(self, game_objects: list) -> None:
+    def fill(self, game_objects: List[BaseObject]) -> None:
         for row in range(self.length):
             for col in range(self.length):
                 self[row, col] = 0
 
         for obj in game_objects:
-            x, y = obj.position.x, obj.position.y
-            print(y, x)
+            y, x = obj.position.get_grid()
             self[y, x] = obj
+
+    def is_empty(self, grid: Grid) -> bool:
+        return self[grid.row, grid.col] == 0
 
     def __getitem__(self, pos: tuple) -> BaseObject:
         if type(pos) is int:
@@ -38,5 +42,3 @@ class GridMap(Singleton):
 
     def __repr__(self):
         return str(self.map)
-
-

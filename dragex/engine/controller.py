@@ -8,10 +8,23 @@ from engine.pathfinder import PathFinder
 from engine.base_object import BaseObject, GridObject, WallObject
 from engine.animation import Animation, AnimationHandler, Transition, SingleSpriteAnimation # noqa
 from engine.object_state import ObjectState
+from engine.npc import Npc
 
 import npcs
 from utils import Singleton, Settings, Size
 import utils
+
+
+def is_player(obj: BaseObject) -> bool:
+    return False
+
+
+def is_enemy_npc(obj: BaseObject) -> bool:
+    return isinstance(obj, Npc) and obj.hostile
+
+
+def is_friendly_npc(obj: BaseObject) -> bool:
+    return isinstance(obj, Npc) and not obj.hostile
 
 
 class Controller(Singleton):
@@ -21,13 +34,20 @@ class Controller(Singleton):
 
         sprite1 = Sprite(Size(1, 1), 'man.png')
         sprite2 = Sprite(Size(1, 1), 'man2.png')
+        sprite3 = Sprite(Size(1, 1), 'man3.png')
         idle = SingleSpriteAnimation(sprite1)
         moving = Animation(frames=[Transition(sprite1, .1),
-                                   Transition(sprite2, .1)])
+                                   Transition(sprite2, .1),
+                                   Transition(sprite3, .1)])
 
-        self.character.anim_handler.add_animation(ObjectState.IDLE, moving)
+        attack_sprite1 = Sprite(Size(1, 1), 'man_attack1.png')
+        attack_sprite2 = Sprite(Size(1, 1), 'man_attack2.png')
+        attacking = Animation(frames=[Transition(attack_sprite1, .1),
+                                      Transition(attack_sprite2, .1)])
+
+        self.character.anim_handler.add_animation(ObjectState.IDLE, idle)
         self.character.anim_handler.add_animation(ObjectState.MOVING, moving)
-        #self.character.anim_handler.add_animation(ObjectState.MOVING, moving)
+        self.character.anim_handler.add_animation(ObjectState.ATTACKING, attacking)
 
         self.game_objects = [self.character]
 
@@ -51,24 +71,42 @@ class Controller(Singleton):
         self.character.ctrl.next_grid = 0
         self.character.ctrl.vel = (0, 0)
 
+    def space_bar(self, event) -> None:
+        grid = utils.get_grid(event.y, event.x)
+        self.game_objects.append(WallObject(world_x=grid.col, world_y=grid.row-1))
+
     def right_button_press(self, key) -> None:
         target_grid = utils.get_grid(key.y, key.x)
         obj = self._get_clicked_object(target_grid)
-        
+
         if obj is not None:
             response = obj.examine()
             self.event_queue.add(response)
-            
-        #self.game_objects.append(WallObject(world_y=target_grid.row,
-        #                         world_x=target_grid.col))
-        
-        self.selected_object = obj
 
+        self.selected_object = obj
 
     def left_button_press(self, key) -> None:
         self.gridmap.fill(self.game_objects)
         target_grid = utils.get_grid(key.y, key.x)
-        self.character.ctrl.set_target(target_grid)
+        target_obj = self.gridmap[target_grid.row, target_grid.col]
+
+        if self.gridmap.is_empty(target_grid):
+            self.character.ctrl.set_target(target_grid)
+        else:
+            # Enemy
+            if is_enemy_npc(target_obj):
+                self.character.ctrl.attack_enemy(target_grid, target_obj)
+
+            # Friendly npc
+            elif is_friendly_npc(target_obj):
+                pass
+
+            # Skills
+            else:
+                pass
+
+        # Better None type for clearing event queue?
+        self.event_queue.add(None)
 
     def get_visible_objects(self) -> List[BaseObject]:
         """ Returns all game object that is visible. """

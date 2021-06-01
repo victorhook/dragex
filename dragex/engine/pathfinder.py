@@ -117,14 +117,11 @@ class PathFinder:
                    or (row == node.row and col == node.col)):
                     continue
 
-                if self._is_traversable(grid):
+                if self.gridmap.is_empty(grid):
                     new_node = Node(row, col, node)
                     nodes.append(new_node)
 
         return nodes
-
-    def _is_traversable(self, grid: Grid) -> bool:
-        return self.gridmap[grid.row, grid.col] == 0
 
     def _get_from_queue(self, queue: PriorityQueue, node: Node) -> Node:
         for n in queue.queue:
@@ -145,6 +142,19 @@ class PathFinder:
 
         return Path(self.src, self.dst, path)
 
+    def attackable_path(self, gridmap: GridMap, src: Grid, dst: Grid) -> Path:
+        possible_end_grids = [
+            Grid(dst.row-1, dst.col),
+            Grid(dst.row+1, dst.col),
+            Grid(dst.row, dst.col-1),
+            Grid(dst.row, dst.col+1),
+        ]
+        for end_grid in possible_end_grids:
+            path = self.find(gridmap, src, end_grid)
+            if path is not None:
+                return path
+        return None
+
     def find(self, gridmap: GridMap, src: Grid, dst: Grid) -> Path:
         """ Finds a path from src to dst grid on the map.
             This methods uses A* to find the shortest path.
@@ -155,7 +165,7 @@ class PathFinder:
         self.src = src
         self.dst = dst
 
-        if not self._is_traversable(dst):
+        if not self.gridmap.is_empty(dst):
             return None
 
         opened = PriorityQueue()

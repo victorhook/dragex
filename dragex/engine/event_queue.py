@@ -1,5 +1,5 @@
 from queue import Queue
-from engine.interact import ExamineResponse
+from engine.interact import ExamineResponse, Status
 
 from utils import Singleton
 
@@ -7,11 +7,14 @@ from utils import Singleton
 class EventType:
 
     EXAMINE_RESPONSE = 1
+    STATUS_UPDATE = 2
 
 
 def _get_event_type(event: object):
     if isinstance(event, ExamineResponse):
         return EventType.EXAMINE_RESPONSE
+    if isinstance(event, Status):
+        return EventType.STATUS_UPDATE
     return 0
 
 
@@ -28,7 +31,9 @@ class EventQueue(Singleton):
         self._queue = Queue()
 
     def add(self, event: object) -> None:
-        """ Adds the event to the event queue. """
+        """ Adds the event to the event queue.
+            The event can be data of any type.
+        """
         event_t = _get_event_type(event)
         self._queue.put(Event(event_t, event))
 

@@ -57,12 +57,18 @@ class GameScreen(basemodels.Frame):
         self.canvas.bind('<Motion>', self._motion)
         self.canvas.bind('<Button-1>', self._left_click)
         self.canvas.bind('<Button-3>', self._right_click)
+        self.master.master.bind('<space>', self._space)
+
+        self._char_state = self.canvas.create_text(100, 20, text='')
 
         self._show_grids = True
         self.grids = None
 
     def _motion(self, e):
         self._cursor(e.x, e.y)
+
+    def _space(self, e) -> None:
+        self.controller.space_bar(e)
 
     def _left_click(self, e) -> None:
         self.controller.left_button_press(e)
@@ -76,10 +82,18 @@ class GameScreen(basemodels.Frame):
 
     def _handle_event_queue(self):
         event = self.event_queue.get()
-        if event is not None:
-            if event.event_type == EventType.EXAMINE_RESPONSE:
-                self._clear_old_examine()
 
+        if event is not None:
+            self._clear_old_examine()
+
+            if event.event_type == EventType.STATUS_UPDATE:
+                try:
+                    text = event.payload.value
+                except Exception:
+                    text = 'Unknown error'
+                self.canvas.itemconfigure(self._char_state, text=text)
+
+            elif event.event_type == EventType.EXAMINE_RESPONSE:
                 examine_popup = Examine(self, event.payload)
                 x = self._cursor.x + examine_popup.width/2
                 y = self._cursor.y + examine_popup.height/2

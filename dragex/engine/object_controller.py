@@ -33,13 +33,14 @@ class ObjectController:
     def __init__(self, pos: Position, state: ObjectState, speed: int = 10):
         self.pos = pos
         self.state = state
+        self.speed = speed
 
         self.vel = Vec2(0, 0)
-        self.speed = speed
         self.path_finder = PathFinder()
         self.target = self.pos
         self.curr_path = None
         self.next_grid = None
+        self.enemy_target = None
 
         self.dist = None
         self.closing_target = True
@@ -78,9 +79,15 @@ class ObjectController:
         if self.arrived():
             # We've arrive at the destination. Set concrete y, x positions.
             self.jump_to(self.curr_path.dst)
-            self.state.set(ObjectState.IDLE)
             self.curr_path = None
             self.next_grid = None
+
+            # If arrived and we're chasing an enemy, we change to attack state.
+            if self.enemy_target is not None:
+                self.state.set(ObjectState.ATTACKING)
+            else:
+                self.state.set(ObjectState.IDLE)
+
             return
 
         elif not self.interpolating and self._within_next_grid():
@@ -102,7 +109,6 @@ class ObjectController:
             if dist > self.dist:
                 self._update_directions()
                 self.dist = dist
-
 
         # Update the positions.
         self.pos.x += self.vel.x * self.speed * elapsed_time
@@ -139,10 +145,19 @@ class ObjectController:
         if dr < 0 and dc < 0:
             self.pos.rotate(Orientation.NW)
 
+    def attack_enemy(self, target: Grid, enemy) -> None:
+        src = self.pos.get_grid()
+        path = self.path_finder.attackable_path(GridMap(), src, target)
+        self._set_path(path)
+        self.enemy_target = enemy
+
     def set_target(self, target: Grid) -> None:
         self.target = None
         path = self.path_finder.find(GridMap(), self.pos.get_grid(), target)
+        self.enemy_target = None
+        self._set_path(path)
 
+    def _set_path(self, path: Path) -> None:
         if path is not None:
             self.state.set(ObjectState.MOVING)
             self.curr_path = path
