@@ -38,14 +38,14 @@ positions = {
 }
 
 rotations = {
-    Orientation.NW: 45,
-    Orientation.N: 45,
-    Orientation.NE: 45,
-    Orientation.E: 45,
+    Orientation.NW: -135,
+    Orientation.N: 180,
+    Orientation.NE: 135,
+    Orientation.E: 90,
     Orientation.SE: 45,
-    Orientation.S: 45,
-    Orientation.SW: 45,
-    Orientation.W: 45,
+    Orientation.S: 0,
+    Orientation.SW: -45,
+    Orientation.W: -90,
 }
 
 
