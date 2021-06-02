@@ -4,8 +4,10 @@ from engine.base_object import BaseObject, GridObject
 from engine.object_controller import ObjectController
 from engine.object_controllable import ControllableGameObject
 
+from engine.player import Player
 
-class Character(ControllableGameObject):
+
+class Character(Player):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
