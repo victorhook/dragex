@@ -1,7 +1,7 @@
 from engine.npc import Npc
 from engine.object_state import ObjectState
 from engine.animation import Animation, Transition, SingleSpriteAnimation
-from engine.sprite import Sprite
+from engine.sprite import SingleSprite
 from utils import Size
 
 
@@ -10,7 +10,7 @@ _GOBLIN_SPRITE = None
 
 def load_sprite():
     global _GOBLIN_SPRITE
-    _GOBLIN_SPRITE = Sprite(Size(1, 1), 'goblin.png')
+    _GOBLIN_SPRITE = SingleSprite('goblin.png')
 
 
 class Goblin(Npc):

@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter.constants import ACTIVE
 
 import utils
-from engine.sprite import Sprite
+from engine.sprite import Sprite, SingleSprite
 from engine.drawable import Drawable
 from engine.interact import ExamineResponse, Action
 
@@ -89,7 +89,7 @@ class TargetObject(BaseObject):
 class WallObject(BaseObject):
 
     def __init__(self, *args, **kwargs):
-        sprite = Sprite(utils.Size(1, 1), 'wall.png')
+        sprite = SingleSprite('wall.png')
         super().__init__(*args, name='Wall', visible=True,
                          active_sprite=sprite, **kwargs)
 

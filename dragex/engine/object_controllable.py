@@ -16,7 +16,7 @@ class ControllableGameObject(BaseObject):
 
     def __init__(self,
                  name: str,
-                 description: str,
+                 description: str = None,
                  speed: int = 1,
                  hp_max: int = 10,
                  attack_range: int = 1,
