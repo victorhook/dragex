@@ -1,4 +1,5 @@
 import tkinter as tk
+from typing import List
 from PIL import ImageTk, Image
 from collections import namedtuple
 
@@ -39,9 +40,21 @@ def _get_image(source: str, width: int, height: int) -> Image:
 
 class Sprite:
 
-    def __init__(self, size: Size, source: str):
-        self.size = _game_size_to_pixel_dimenions(size)
+    def draw(self, position: Position, canvas: tk.Canvas):
+        pass
+
+    def hide(self, canvas: tk.Canvas) -> None:
+        pass
+
+    def show(self, canvas: tk.Canvas) -> None:
+        pass
+
+
+class SingleSprite(Sprite):
+
+    def __init__(self, source: str, size: Size = Size(1, 1)):
         self.source = source
+        self.size = _game_size_to_pixel_dimenions(size)
         self._tag = None
         self._hidden = False
         self._orientation: Orientation = None
@@ -88,7 +101,37 @@ class Sprite:
         return canvas.create_image(x, y, image=self.image)
 
 
-class NullSprite(Sprite):
+class NullSprite(SingleSprite):
 
     def __init__(self):
         super().__init__(Size(1, 1), 'null.png')
+
+
+class EmptySprite(Sprite):
+    pass
+
+
+class SpriteCollection(Sprite):
+    """ This class holds several Sprites and lets us
+        use treat them as a single sprite.
+    """
+    def __init__(self):
+        self._sprites: List[Sprite] = []
+
+    def add(self, sprite: Sprite) -> None:
+        self._sprites.append(sprite)
+
+    def __iter__(self) -> list:
+        return self._sprites
+
+    def draw(self, position: Position, canvas: tk.Canvas) -> None:
+        for sprite in self._sprites:
+            sprite.draw(position, canvas)
+
+    def hide(self, canvas: tk.Canvas) -> None:
+        for sprite in self._sprites:
+            sprite.hide(canvas)
+
+    def show(self, canvas: tk.Canvas) -> None:
+        for sprite in self._sprites:
+            sprite.show(canvas)
