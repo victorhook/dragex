@@ -3,13 +3,14 @@ from typing import List
 from client import DragexClient
 from engine.character import Character
 from engine.event_queue import EventQueue
-from engine.sprite import Sprite
+from engine.sprite import SingleSprite
 from engine.gridmap import GridMap
 from engine.pathfinder import PathFinder
 from engine.base_object import BaseObject, GridObject, WallObject
 from engine.animation import Animation, AnimationHandler, Transition, SingleSpriteAnimation # noqa
 from engine.object_state import ObjectState
 from engine.npc import Npc
+from engine.player import Player
 import npcs
 import utils
 from utils import Singleton, Settings, Size
@@ -32,25 +33,27 @@ class Controller(Singleton):
     def init(self):
         self.client = DragexClient()
 
+        """
         self.character = Character('Hubert', 'Nisse', speed=5, world_x=10, world_y=10)
 
-        sprite1 = Sprite(Size(1, 1), 'man.png')
-        sprite2 = Sprite(Size(1, 1), 'man2.png')
-        sprite3 = Sprite(Size(1, 1), 'man3.png')
+        sprite1 = SingleSprite(Size(1, 1), 'man.png')
+        sprite2 = SingleSprite(Size(1, 1), 'man2.png')
+        sprite3 = SingleSprite(Size(1, 1), 'man3.png')
         idle = SingleSpriteAnimation(sprite1)
         moving = Animation(frames=[Transition(sprite1, .1),
                                    Transition(sprite2, .1),
                                    Transition(sprite3, .1)])
 
-        attack_sprite1 = Sprite(Size(1, 1), 'man_attack1.png')
-        attack_sprite2 = Sprite(Size(1, 1), 'man_attack2.png')
+        attack_sprite1 = SingleSprite(Size(1, 1), 'man_attack1.png')
+        attack_sprite2 = SingleSprite(Size(1, 1), 'man_attack2.png')
         attacking = Animation(frames=[Transition(attack_sprite1, .1),
                                       Transition(attack_sprite2, .1)])
 
         self.character.anim_handler.add_animation(ObjectState.IDLE, idle)
         self.character.anim_handler.add_animation(ObjectState.MOVING, moving)
         self.character.anim_handler.add_animation(ObjectState.ATTACKING, attacking)
-
+        """
+        self.character = Player('Nisse persson')
         self.game_objects = [self.character]
 
         goblin = npcs.Goblin()
