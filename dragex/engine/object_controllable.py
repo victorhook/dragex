@@ -23,20 +23,18 @@ class ControllableGameObject(BaseObject):
                  combat_type: int = Combat.MELEE,
                  max_damage: int = 1,
                  damage_freq: float = 0.3,
-                 aggresive: bool = False,
                  **kwargs
                  ):
         super().__init__(name, description, **kwargs)
 
         self.anim_handler = AnimationHandler(self)
-        self.state: ObjectState = ObjectState(self.anim_handler)
+        self.state = ObjectState(self.anim_handler)
         self.ctrl = ObjectController(self.position, self.state, speed)
 
         self.hp_max = hp_max
         self.hp = self.hp_max
         self.range = attack_range
         self.combat_type = combat_type
-        self.aggresive = aggresive
         self.max_damage = max_damage
         self.damage_freq = damage_freq
 

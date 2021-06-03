@@ -1,20 +1,27 @@
 from engine.object_controllable import ControllableGameObject
-from engine import interact
+from engine.interact import (HostileNpcExamine, FriendlyNpcExamine, Action,
+                             ExamineResponse)
 
 
 class Npc(ControllableGameObject):
 
-    def __init__(self, *args, hostile: bool = False, **kwargs):
+    def __init__(self,
+                 *args,
+                 level: int = 0,
+                 hostile: bool = False,
+                 aggresive: bool = False,
+                 **kwargs):
         super().__init__(*args, **kwargs)
-        self.hostile = hostile
-        if self.hostile:
-            self._examine = interact.HostileNpcExamine()
-        else:
-            self._examine = interact.FriendlyNpcExamine()
 
-    def interract(self, action: interact.Action) -> None:
+        self.level = level
+        self.hostile = hostile
+        self.aggresive = aggresive
+        self._examine = (HostileNpcExamine() if hostile
+                         else FriendlyNpcExamine())
+
+    def interract(self, action: Action) -> None:
         print(f'Interract with {self.name}')
         pass
 
-    def examine(self) -> interact.ExamineResponse:
+    def examine(self) -> ExamineResponse:
         return self._examine

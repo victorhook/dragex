@@ -107,7 +107,7 @@ class GameScreen(basemodels.Frame):
         self._handle_event_queue()
 
         if self._show_grids:
-            #self._render_gridmap()
+            self._render_gridmap()
             pass
 
         self.renderer.render(elapsed_time)

@@ -1,0 +1,24 @@
+{
+    "goblin": {
+        "stats": {
+            "description": "",
+            "speed": "",
+            "hp_max": "",
+            "attack_range": "",
+            "combat_type": "",
+            "max_damage": "",
+            "damage_freq": "",
+            "level": "",
+            "hostile": "true",
+            "aggresive": ""
+        },
+        "size": [2, 2],
+        "animations": {
+            "transition_speed": 0.1,
+            "IDLE": ["idle"],
+            "MOVING": [],
+            "ATTACKING": [],
+            "DANCING": []
+        }
+    }
+}

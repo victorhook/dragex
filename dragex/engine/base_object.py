@@ -1,3 +1,4 @@
+from typing import List
 import tkinter as tk
 from tkinter.constants import ACTIVE
 
@@ -32,8 +33,18 @@ class BaseObject(Drawable):
         self.active_sprite = active_sprite
         self._last_sprite = active_sprite
 
-    def get_grid(self) -> utils.Grid:
-        return utils.Grid(self.position.x, self.position.y)
+    def get_grids(self) -> List[utils.Grid]:
+        grids = set()
+        if self.size.width == 1 and self.size.height == 1:
+            grids.add(utils.Grid(self.position.y, self.position.x))
+        else:
+            for row in range(self.size.height):
+                for col in range(self.size.width):
+                    y = self.position.y + row
+                    x = self.position.x + col
+                    grids.add(utils.Grid(y, x))
+
+        return grids
 
     def is_visible(self):
         return self.visible

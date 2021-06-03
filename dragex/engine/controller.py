@@ -3,6 +3,7 @@ from typing import List
 from client import DragexClient
 from engine.character import Character
 from engine.event_queue import EventQueue
+from engine.npc_factory import NpcFactory
 from engine.sprite import SingleSprite
 from engine.gridmap import GridMap
 from engine.pathfinder import PathFinder
@@ -33,32 +34,14 @@ class Controller(Singleton):
     def init(self):
         self.client = DragexClient()
 
-        """
-        self.character = Character('Hubert', 'Nisse', speed=5, world_x=10, world_y=10)
-
-        sprite1 = SingleSprite(Size(1, 1), 'man.png')
-        sprite2 = SingleSprite(Size(1, 1), 'man2.png')
-        sprite3 = SingleSprite(Size(1, 1), 'man3.png')
-        idle = SingleSpriteAnimation(sprite1)
-        moving = Animation(frames=[Transition(sprite1, .1),
-                                   Transition(sprite2, .1),
-                                   Transition(sprite3, .1)])
-
-        attack_sprite1 = SingleSprite(Size(1, 1), 'man_attack1.png')
-        attack_sprite2 = SingleSprite(Size(1, 1), 'man_attack2.png')
-        attacking = Animation(frames=[Transition(attack_sprite1, .1),
-                                      Transition(attack_sprite2, .1)])
-
-        self.character.anim_handler.add_animation(ObjectState.IDLE, idle)
-        self.character.anim_handler.add_animation(ObjectState.MOVING, moving)
-        self.character.anim_handler.add_animation(ObjectState.ATTACKING, attacking)
-        """
         self.character = Player('Nisse persson')
         self.game_objects = [self.character]
 
-        goblin = npcs.Goblin()
-        goblin.ctrl.jump_to(utils.Grid(10, 12))
+        factory: NpcFactory = NpcFactory()
+        goblin = factory.create('goblin')
         self.game_objects.append(goblin)
+
+        goblin.ctrl.jump_to(utils.Grid(5, 5))
 
         for i in range(8):
             self.game_objects.append(WallObject(world_x=8, world_y=2+i))

@@ -10,25 +10,25 @@ class Gear:
 
     def __init__(self,
                  stats: GearStats,
-                 sprites: Dict[Sprite] = dict()
+                 sprites: Dict[int, Sprite] = dict()
                  ):
         self.stats = stats
         self._sprites = sprites
 
     def get_sprite(self, state: int) -> Sprite:
-        return self.sprites[state]
+        return self._sprites[state]
 
 
 class Sword(Gear):
 
     def __init__(self):
         idle = SingleSprite('sword.png')
-        attacking =
+        #attacking =
 
         super().__init__(GearStats(), {
             ObjectState.IDLE: idle,
             ObjectState.MOVING: idle,
-            ObjectState.ATTACKING: sprite,
+            ObjectState.ATTACKING: idle,
         })
 
 

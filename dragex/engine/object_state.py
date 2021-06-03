@@ -9,7 +9,7 @@ class ObjectState:
     ATTACKING = 2
     DANCING = 3
 
-    _STATE_STRINGS = {
+    STATE_STRINGS = {
         IDLE: 'IDLE',
         MOVING: 'MOVING',
         ATTACKING: 'ATTACKING',
@@ -28,7 +28,7 @@ class ObjectState:
         print(self)
 
     def __repr__(self):
-        return self._STATE_STRINGS[self._state]
+        return self.STATE_STRINGS[self._state]
 
     def get(self) -> int:
         return self._state
