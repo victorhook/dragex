@@ -22,19 +22,25 @@ def _game_size_to_pixel_dimenions(size: Size) -> Dimension:
     return Dimension(width, height)
 
 
-def _game_position_to_pixel_coords(position: Position) -> Coordinates:
+def _game_position_to_pixel_coords(size: Size,
+                                   position: Position) -> Coordinates:
     """ Turns game position, aka grid square position into
         pixel coordinates.
         Returns a tuple of (x, y).
     """
-    x = position.x * Settings.GRID_SIZE + (Settings.GRID_SIZE / 2)
-    y = position.y * Settings.GRID_SIZE + (Settings.GRID_SIZE / 2)
+    x = position.x * Settings.GRID_SIZE + size.width*(Settings.GRID_SIZE / 2)
+    y = position.y * Settings.GRID_SIZE + size.height*(Settings.GRID_SIZE / 2)
+
     return Coordinates(x, y)
 
 
-def _get_image(source: str, width: int, height: int) -> Image:
+def _get_image(source: str, size: Size) -> Image:
+    if not source.endswith(Settings.SPRITE_EXTENSION):
+        source += Settings.SPRITE_EXTENSION
+
+    pixel_size = _game_size_to_pixel_dimenions(size)
     image = AssetHandler.open_sprite(source)
-    image = image.resize((width, height))
+    image = image.resize((pixel_size.width, pixel_size.height))
     return image
 
 
@@ -54,12 +60,13 @@ class SingleSprite(Sprite):
 
     def __init__(self, source: str, size: Size = Size(1, 1)):
         self.source = source
-        self.size = _game_size_to_pixel_dimenions(size)
+        self.size = size
+        
         self._tag = None
         self._hidden = False
         self._orientation: Orientation = None
 
-        self._raw_image = _get_image(source, self.size.width, self.size.height)
+        self._raw_image = _get_image(source, size)
         self._set_image(self._raw_image)
 
     def _set_image(self, image: Image) -> None:
@@ -73,7 +80,7 @@ class SingleSprite(Sprite):
         self._set_image(image)
 
     def draw(self, position: Position, canvas: tk.Canvas):
-        x, y = _game_position_to_pixel_coords(position)
+        x, y = _game_position_to_pixel_coords(self.size, position)
 
         if (self._orientation is None
            or position.orientation != self._orientation):

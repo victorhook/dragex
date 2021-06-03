@@ -17,8 +17,8 @@ class GridMap(Singleton):
                 self[row, col] = 0
 
         for obj in game_objects:
-            y, x = obj.position.get_grid()
-            self[y, x] = obj
+            for grid in obj.get_grids():
+                self[grid.row, grid.col] = obj
 
     def is_empty(self, grid: Grid) -> bool:
         return self[grid.row, grid.col] == 0
