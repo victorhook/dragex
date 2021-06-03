@@ -5,18 +5,8 @@ from engine.sprite import SingleSprite
 from utils import Size
 
 
-_GOBLIN_SPRITE = None
-
-
-def load_sprite():
-    global _GOBLIN_SPRITE
-    _GOBLIN_SPRITE = SingleSprite('goblin.png')
-
-
 class Goblin(Npc):
 
     def __init__(self):
-        load_sprite()
-        super().__init__('Goblin', 'A nasty little creature.', hostile=True)
-        self.anim_handler.add_animation(ObjectState.IDLE,
-                                        SingleSpriteAnimation(_GOBLIN_SPRITE))
+        super().__init__('Goblin', 'A nasty little creature.', hostile=True,
+                         size=Size(1, 1))
