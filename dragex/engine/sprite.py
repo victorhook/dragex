@@ -3,9 +3,11 @@ from typing import List
 from PIL import ImageTk, Image
 from collections import namedtuple
 
+from engine.drawable import Drawable
+from engine.exceptions import NoSpriteExists
+
 from utils import AssetHandler, Size, Position
 from utils.position import Orientation
-from .drawable import Drawable
 from utils import Settings
 
 
@@ -35,18 +37,31 @@ def _game_position_to_pixel_coords(size: Size,
 
 
 def _get_image(source: str, size: Size) -> Image:
+    org_source = source
+
+    # Add proper extension if needed.
     if not source.endswith(Settings.SPRITE_EXTENSION):
         source += Settings.SPRITE_EXTENSION
 
+    # Get the proper pixel size.
     pixel_size = _game_size_to_pixel_dimenions(size)
-    image = AssetHandler.open_sprite(source)
+
+    # Load the image from disk.
+    try:
+        image = AssetHandler.open_sprite(source)
+    except Exception:
+        raise NoSpriteExists(f'Failed to load sprite {org_source}')
+
+    # Resize the sprite to correct dimensions before returning.
     image = image.resize((pixel_size.width, pixel_size.height))
     return image
 
 
 class Sprite:
 
-    def draw(self, position: Position, canvas: tk.Canvas):
+    """ Sprite interface. """
+
+    def draw(self, position: Position, canvas: tk.Canvas) -> None:
         pass
 
     def hide(self, canvas: tk.Canvas) -> None:
@@ -58,28 +73,24 @@ class Sprite:
 
 class SingleSprite(Sprite):
 
-    def __init__(self, source: str, size: Size = Size(1, 1)):
-        self.source = source
+    _id = 0
+
+    def __init__(self, name: str, size: Size):
+        # Set name & size and increment id.
+        self.name = name
         self.size = size
-        
+        self.id = SingleSprite._id
+        SingleSprite._id += 1
+
         self._tag = None
         self._hidden = False
         self._orientation: Orientation = None
 
-        self._raw_image = _get_image(source, size)
+        # The name of the sprite is the same as the source name.
+        self._raw_image = _get_image(self.name, self.size)
         self._set_image(self._raw_image)
 
-    def _set_image(self, image: Image) -> None:
-        """ Sets the image to be displayed. """
-        self.image = ImageTk.PhotoImage(image)
-        self._tag = None
-
-    def _rotate(self, position: Position) -> None:
-        angle = position.get_rotation_angle()
-        image = self._raw_image.rotate(angle)
-        self._set_image(image)
-
-    def draw(self, position: Position, canvas: tk.Canvas):
+    def draw(self, position: Position, canvas: tk.Canvas) -> None:
         x, y = _game_position_to_pixel_coords(self.size, position)
 
         if (self._orientation is None
@@ -107,11 +118,21 @@ class SingleSprite(Sprite):
     def _create_image_tag(self, canvas: tk.Canvas, x: int, y: int) -> str:
         return canvas.create_image(x, y, image=self.image)
 
+    def _set_image(self, image: Image) -> None:
+        """ Sets the image to be displayed. """
+        self.image = ImageTk.PhotoImage(image)
+        self._tag = None
+
+    def _rotate(self, position: Position) -> None:
+        angle = position.get_rotation_angle()
+        image = self._raw_image.rotate(angle)
+        self._set_image(image)
+
 
 class NullSprite(SingleSprite):
 
     def __init__(self):
-        super().__init__(Size(1, 1), 'null.png')
+        super().__init__('null', Size(1, 1))
 
 
 class EmptySprite(Sprite):
