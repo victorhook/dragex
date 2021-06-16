@@ -5,8 +5,8 @@ import tkinter as tk
 class ScrollableFrame(basemodels.Frame):
     """ Wrapper class that allows a frame to be scrollable. """
 
-    def __init__(self, master, width):
-        super().__init__(master)
+    def __init__(self, master, width, **kwargs):
+        super().__init__(master, **kwargs)
 
         self._canvas = tk.Canvas(self, height=100, width=width)
         self._scroll = basemodels.Scrollbar(self, orient='vertical',

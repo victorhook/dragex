@@ -3,6 +3,7 @@ import tkinter as tk
 
 from engine import Controller
 from engine.event_queue import EventQueue, EventType
+from engine.screen import Screen
 from ui import basemodels
 from ui.examine import Examine
 from ui.renderer import Renderer
@@ -22,6 +23,11 @@ class Cursor:
         self.y = y
 
 
+class TkScreen(tk.Canvas, Screen):
+    """ Tk specific game screen. """
+    pass
+
+
 class GameScreen(basemodels.Frame):
 
     def __init__(self, master):
@@ -34,8 +40,8 @@ class GameScreen(basemodels.Frame):
 
         # Frame for inventory and game canvas
         self.frame = basemodels.Frame(self)
-        self.canvas = tk.Canvas(self.frame, width=self.width,
-                                height=self.height)
+        self.canvas = TkScreen(self.frame, width=self.width,
+                               height=self.height)
         self.chat = Chat(self.frame, width=self.width)
 
         self.canvas.pack()
