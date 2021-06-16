@@ -21,17 +21,22 @@ class BaseObject(Drawable):
                  desription: str = None,
                  world_x: int = 0,
                  world_y: int = 0,
+                 orientation: int = 0,
                  visible: bool = True,
                  size: utils.Size = None,
                  active_sprite: Sprite = None,
                  ):
         self.name = _get_name(name)
         self.desription = desription
-        self.position = utils.WorldPosition(world_x, world_y)
+        self.position = utils.WorldPosition(world_x, world_y,
+                                            orientation=orientation)
         self.size = _get_default_size() if size is None else size
         self.visible = visible
         self.active_sprite = active_sprite
         self._last_sprite = active_sprite
+
+    def __str__(self):
+        return self.name
 
     def get_grids(self) -> List[utils.Grid]:
         grids = set()
