@@ -80,20 +80,40 @@ class Engine(Tickable):
             - Broadcast events to all players.
 
             * Check private messages?
+
+            loots = self.calculate_loots()
+            damages = self.calculate_damages()
+            events = self.calculate_events()
+            new_monsters = self.spawn_new_monsters()
+            chat_messages = self.get_chat_messages()
+            private_messages = self.get_private_messages()
         """
 
-        loots = self.calculate_loots()
-        damages = self.calculate_damages()
-        events = self.calculate_events()
-        new_monsters = self.spawn_new_monsters()
-        chat_messages = self.get_chat_messages()
-        private_messages = self.get_private_messages()
 
-        self.server.broadcast(
-            loots,
-            damages,
-            events,
-            new_monsters,
-            chat_messages,
-            private_messages
-        )
+        #self.server.broadcast(
+
+        #)
+
+    def serialize_game_objects(self):
+        objects = []
+        for game_object in self.game_objects:
+            objects.append(game_object.serialize())
+        return objects
+
+    def calculate_loots(self):
+        pass
+
+    def calculate_damages(self):
+        pass
+
+    def calculate_events(self):
+        pass
+
+    def spawn_new_monsters(self):
+        pass
+
+    def get_chat_messages(self):
+        pass
+
+    def get_private_messages(self):
+        pass
