@@ -1,13 +1,20 @@
 from utils import Singleton, AssetHandler
+from engine.base_object import BaseObject
 from engine.object_factory import ObjectFactory
+
+from typing import List
 
 
 class World:
 
-    def __init__(self, world: dict):
-        self.objects = []
-        for obj in world:
-            self.objects.append(ObjectFactory.create(obj))
+    def __init__(self, world: dict = None):
+        if world is not None:
+            self.update(world)
+
+    def update(self, world: dict):
+        self.objects = List[BaseObject]
+        #for obj in world:
+        #    self.objects.append(ObjectFactory.create(obj))
 
     def __iter__(self) -> list:
         return self.objects

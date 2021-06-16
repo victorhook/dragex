@@ -1,6 +1,6 @@
 from utils import Grid
 from .gridmap import GridMap
-from .base_object import BaseObject, EmptyObject
+from .base_object import BaseObject
 
 from queue import PriorityQueue, Queue, deque
 from dataclasses import dataclass

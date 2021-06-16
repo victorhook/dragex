@@ -2,6 +2,7 @@ from engine.npc import Npc
 from engine.animation import Animation, Transition
 from engine.sprite import Sprite, SingleSprite
 from engine.object_state import ObjectState
+from engine.sprite_loader import SpriteLoader
 import npcs
 from utils import Singleton, AssetHandler
 
@@ -21,9 +22,13 @@ class NpcFactory:
         return Class()
 
     def _get_sprite(npc: Npc, sprite: str) -> Sprite:
+        """
+            Sprite path name for npcs are:
+            npcs.NpcName.SpriteName
+        """
         sprite_path = str(NpcFactory.__BASE_PATH.joinpath(npc.name.lower(),
                                                           sprite))
-        return SingleSprite(sprite_path, npc.size)
+        return SpriteLoader.instance().get_sprite(sprite_path, npc.size)
 
     def _set_skills(npc: Npc, skills: dict) -> None:
         for key, value in skills.items():
@@ -47,7 +52,7 @@ class NpcFactory:
 
     def _get_blueprint(npc: str) -> dict:
         if NpcFactory.__BLUEPRINTS is None:
-            NpcFactory.__BLUEPRINTS = AssetHandler.open_blueprints()
+            NpcFactory.__BLUEPRINTS = AssetHandler.open_blueprint('npcs')
         return NpcFactory.__BLUEPRINTS[npc.title()]
 
     def create(npc: str) -> Npc:

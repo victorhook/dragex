@@ -1,0 +1,2 @@
+class NoSpriteExists(Exception):
+    pass

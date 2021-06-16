@@ -1,13 +1,9 @@
 from engine.base_object import BaseObject
-from engine.player import Player
+from player import Player
 from engine.npc import Npc
 from engine.npc_factory import NpcFactory
 from npcs import Goblin
 import utils
-
-
-def _get_available_game_types() -> list:
-    return [Player, Goblin]
 
 
 class ObjectFactory:
@@ -15,8 +11,13 @@ class ObjectFactory:
     __AVAILABLE_GAME_TYPES = None
 
     @staticmethod
+    def get_available_game_objects() -> list:
+        return [Player, Goblin]
+
+    @staticmethod
     def serialize(obj: BaseObject) -> dict:
         """ Serializes a gameobject into a dictionary. """
+
         return {
             'type': obj.__class__.__name__,
             'name': obj.name,
@@ -51,7 +52,7 @@ class ObjectFactory:
     @staticmethod
     def _get_obj_class(obj_t: str) -> type:
         if ObjectFactory.__AVAILABLE_GAME_TYPES is None:
-            ObjectFactory.__AVAILABLE_GAME_TYPES = _get_available_game_types()
+            ObjectFactory.__AVAILABLE_GAME_TYPES = ObjectFactory.get_available_game_objects() # noqa
 
         for obj_type in ObjectFactory.__AVAILABLE_GAME_TYPES:
             if obj_t.lower() == obj_type.__name__.lower():

@@ -1,17 +1,18 @@
 from typing import List
 
 from client import DragexClient
+from engine.world import WorldLoader
 from engine.character import Character
 from engine.event_queue import EventQueue
 from engine.npc_factory import NpcFactory
 from engine.sprite import SingleSprite
 from engine.gridmap import GridMap
 from engine.pathfinder import PathFinder
-from engine.base_object import BaseObject, GridObject, WallObject
+from engine.base_object import BaseObject
 from engine.animation import Animation, AnimationHandler, Transition, SingleSpriteAnimation # noqa
 from engine.object_state import ObjectState
 from engine.npc import Npc
-from engine.player import Player
+from player import Player
 import npcs
 import utils
 from utils import Singleton, Settings, Size
@@ -37,15 +38,9 @@ class Controller(Singleton):
         self.character = Player('Nisse persson')
         self.game_objects = [self.character]
 
-        factory: NpcFactory = NpcFactory()
-        goblin = factory.create('goblin')
-        self.game_objects.append(goblin)
-
-        goblin.ctrl.jump_to(utils.Grid(5, 5))
-
-        for i in range(8):
-            self.game_objects.append(WallObject(world_x=8, world_y=2+i))
-            self.game_objects.append(WallObject(world_x=12, world_y=2+i))
+        #factory = NpcFactory()
+        #goblin = NpcFactory.create('goblin')
+        #self.game_objects.append(goblin)
 
         self.event_queue = EventQueue()
         self.gridmap = GridMap()
@@ -61,7 +56,6 @@ class Controller(Singleton):
 
     def space_bar(self, event) -> None:
         grid = utils.get_grid(event.y, event.x)
-        self.game_objects.append(WallObject(world_x=grid.col, world_y=grid.row-1))
 
     def right_button_press(self, key) -> None:
         target_grid = utils.get_grid(key.y, key.x)

@@ -25,7 +25,6 @@ class ObjectState:
         self._state = state
         self._anim_handler.set_state(self._state)
         self._event_queue.add(interact.Status('state', str(self)))
-        print(self)
 
     def __repr__(self):
         return self.STATE_STRINGS[self._state]
