@@ -1,8 +1,8 @@
-import tkinter as tk
 from typing import List
 from PIL import ImageTk, Image
 from collections import namedtuple
 
+from engine.screen import Screen
 from engine.drawable import Drawable
 from engine.exceptions import NoSpriteExists
 
@@ -61,13 +61,13 @@ class Sprite:
 
     """ Sprite interface. """
 
-    def draw(self, position: Position, canvas: tk.Canvas) -> None:
+    def draw(self, position: Position, screen: Screen) -> None:
         pass
 
-    def hide(self, canvas: tk.Canvas) -> None:
+    def hide(self, screen: Screen) -> None:
         pass
 
-    def show(self, canvas: tk.Canvas) -> None:
+    def show(self, screen: Screen) -> None:
         pass
 
 
@@ -90,7 +90,7 @@ class SingleSprite(Sprite):
         self._raw_image = _get_image(self.name, self.size)
         self._set_image(self._raw_image)
 
-    def draw(self, position: Position, canvas: tk.Canvas) -> None:
+    def draw(self, position: Position, screen: Screen) -> None:
         x, y = _game_position_to_pixel_coords(self.size, position)
 
         if (self._orientation is None
@@ -99,24 +99,24 @@ class SingleSprite(Sprite):
             self._rotate(position)
 
         if self._tag is None:
-            self._tag = self._create_image_tag(canvas, x, y)
+            self._tag = self._create_image_tag(screen, x, y)
         else:
-            canvas.coords(self._tag, x, y)
+            screen.coords(self._tag, x, y)
             if self._hidden:
-                self.show(canvas)
+                self.show(screen)
 
-    def hide(self, canvas: tk.Canvas) -> None:
+    def hide(self, screen: Screen) -> None:
         if self._tag:
-            canvas.itemconfigure(self._tag, state='hidden')
+            screen.itemconfigure(self._tag, state='hidden')
             self._hidden = True
 
-    def show(self, canvas: tk.Canvas) -> None:
+    def show(self, screen: Screen) -> None:
         if self._tag:
-            canvas.itemconfigure(self._tag, state='normal')
+            screen.itemconfigure(self._tag, state='normal')
             self._hidden = False
 
-    def _create_image_tag(self, canvas: tk.Canvas, x: int, y: int) -> str:
-        return canvas.create_image(x, y, image=self.image)
+    def _create_image_tag(self, screen: Screen, x: int, y: int) -> str:
+        return screen.create_image(x, y, image=self.image)
 
     def _set_image(self, image: Image) -> None:
         """ Sets the image to be displayed. """
@@ -152,14 +152,14 @@ class SpriteCollection(Sprite):
     def __iter__(self) -> list:
         return self._sprites
 
-    def draw(self, position: Position, canvas: tk.Canvas) -> None:
+    def draw(self, position: Position, screen: Screen) -> None:
         for sprite in self._sprites:
             sprite.draw(position, canvas)
 
-    def hide(self, canvas: tk.Canvas) -> None:
+    def hide(self, screen: Screen) -> None:
         for sprite in self._sprites:
             sprite.hide(canvas)
 
-    def show(self, canvas: tk.Canvas) -> None:
+    def show(self, screen: Screen) -> None:
         for sprite in self._sprites:
             sprite.show(canvas)
