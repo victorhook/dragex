@@ -7,6 +7,9 @@ from utils import Size
 
 class Goblin(Npc):
 
-    def __init__(self):
-        super().__init__('Goblin', 'A nasty little creature.', hostile=True,
-                         size=Size(1, 1))
+    def __init__(self, *args, **kwargs):
+        kwargs['name'] = 'Goblin'
+        kwargs['description'] = 'A nasty little creature.'
+        kwargs['size'] = Size(1, 1)
+        kwargs['hostile'] = True
+        super().__init__(*args, **kwargs)

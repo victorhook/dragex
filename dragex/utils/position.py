@@ -73,11 +73,3 @@ class Position:
 
     def __repr__(self):
         return f'Ori: {self.orientation} - {positions[self.orientation]} Pos: {self.get_grid()}'
-
-
-class WorldPosition(Position):
-    pass
-
-
-class RelativePosition(Position):
-    pass
