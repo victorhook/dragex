@@ -5,3 +5,4 @@ from .singleton import Singleton # noqa
 from .settings import Settings # noqa
 from .fps import Fps # noqa
 from .levels import Levels # noqa
+from .log import get_logger # noqa

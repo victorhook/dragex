@@ -3,6 +3,7 @@ import os
 import json
 
 from .singleton import Singleton
+from .settings import Settings
 
 
 BASE_PATH = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
@@ -13,21 +14,24 @@ FILE_WORLD = 'world.json'
 
 class AssetHandler(Singleton):
 
+    SPRITEPATH = os.path.join(BASE_PATH, 'sprites')
+
+
     @staticmethod
-    def _get_json_filename(file) -> dict:
-        if not file.endswith('.json'):
-            file += '.json'
-        return file
+    def _ensure_file_extension(filename: str, extension: str) -> str:
+        if not filename.endswith(f'.{extension}'):
+            filename += f'.{extension}'
+        return filename
 
     @staticmethod
     def _open_json(file) -> dict:
-        file = AssetHandler._get_json_filename(file)
+        file = AssetHandler._ensure_file_extension(file, 'json')
         with open(os.path.join(file)) as f:
             return json.load(f)
 
     @staticmethod
     def _save_json(data, file) -> dict:
-        file = AssetHandler._get_json_filename(file)
+        file = AssetHandler._ensure_file_extension(file, 'json')
         print(f'Saving {data} to {file}')
         with open(os.path.join(file), 'w') as f:
             return json.dump(data, f)
@@ -38,7 +42,8 @@ class AssetHandler(Singleton):
 
     @staticmethod
     def open_sprite(asset: str) -> Image:
-        return Image.open(AssetHandler.path('sprites', asset))
+        filename = AssetHandler._ensure_file_extension(asset, Settings.SPRITE_EXTENSION) # noqa
+        return Image.open(AssetHandler.path('sprites', filename))
 
     @staticmethod
     def open_world() -> dict:
