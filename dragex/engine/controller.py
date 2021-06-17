@@ -10,9 +10,8 @@ from engine.gridmap import GridMap
 from engine.pathfinder import PathFinder
 from objects import BaseObject
 from engine.animation import Animation, AnimationHandler, Transition, SingleSpriteAnimation # noqa
-from objects import ObjectState
-from objects import Npc
-from objects import Player
+from loaders.sprite_loader import SpriteLoader
+from objects import ObjectState, Npc, Player
 import npcs
 import utils
 from utils import Singleton, Settings, Size
@@ -56,6 +55,8 @@ class Controller(Singleton):
 
     def space_bar(self, event) -> None:
         grid = utils.get_grid(event.y, event.x)
+        #self.character.active_sprite = SpriteLoader().get_sprite('man')
+        self.character.anim_handler.add_animation('IDLE', Animation(frames=[Transition(self.LOADER.get_sprite('man'), .1)]))
 
     def right_button_press(self, key) -> None:
         target_grid = utils.get_grid(key.y, key.x)

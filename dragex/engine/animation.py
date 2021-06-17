@@ -3,9 +3,11 @@ from typing import Dict, List
 import time
 
 from engine.sprite import Sprite, NullSprite
+from utils import get_logger
 
 
 Transition = namedtuple('Transition', ['sprite', 'duration'])
+logger = get_logger()
 
 
 class Animation:
@@ -64,7 +66,14 @@ class AnimationHandler:
 
     def set_state(self, state: int) -> bool:
         if state not in self._animations:
-            raise RuntimeError(f'Failed to find state {state}')
+            logger.warning(f'Failed to load animation in state: {state}')
+            #raise RuntimeError(f'Failed to find state {state}')
+
+            # TODO: Better implementation for this.
+            # Temporary fix.
+            if self._curr_state is not None:
+                self._animations[state] = self._animations[self._curr_state]
+
         self._curr_state = state
 
     def add_animation(self, state: str, animation: Animation) -> None:

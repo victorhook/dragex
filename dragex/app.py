@@ -11,6 +11,7 @@ from ui.gamescreen import GameScreen
 from ui.loginscreen import LoginScreen
 from ui.uistate import UiState
 from ui.toolbox import Toolbox
+from ui.tk_loader import TkSpriteLoader
 from ui import basemodels
 from utils import AssetHandler, Fps
 
@@ -49,6 +50,7 @@ class App(tk.Tk):
 
         # Controller
         self.controller = Controller()
+        self.controller.LOADER = TkSpriteLoader()
         self.t0 = time.time()
 
         self.hovered_item = None
@@ -56,6 +58,9 @@ class App(tk.Tk):
 
         self.bind('<Key-s>', lambda e: self.client.start())
         self.bind('<Key-q>', lambda e: self.client.stop())
+
+        # Load sprites
+        TkSpriteLoader().load_sprites()
 
         # Start rendering
         self.render()

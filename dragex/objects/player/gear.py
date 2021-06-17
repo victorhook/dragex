@@ -1,7 +1,7 @@
 from typing import Dict
 
 from ..base_object import ObjectState
-from engine.sprite import Sprite, EmptySprite, SingleSprite
+from engine.sprite import Sprite, SingleSprite
 from loaders.sprite_loader import SpriteLoader
 from interfaces.drawable import Drawable
 

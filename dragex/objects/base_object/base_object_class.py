@@ -81,8 +81,8 @@ class BaseObject(Drawable, GameObject):
     def __str__(self):
         return self.name
 
-    def __eq__(self):
-        return self.id
+    def __eq__(self, other):
+        return hasattr(other, 'id') and other.id == self.id
 
     def _get_name(self, name: str) -> str:
         if name is None:

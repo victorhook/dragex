@@ -1,12 +1,13 @@
-from objects import Npc
+from pathlib import Path
+
+
+from objects import Npc, ObjectState
 from engine.animation import Animation, Transition
-from engine.sprite import Sprite, SingleSprite
-from objects import ObjectState
+from engine.sprite import Sprite
 from loaders.sprite_loader import SpriteLoader
 import npcs
-from utils import Singleton, AssetHandler
+from utils import AssetHandler
 
-from pathlib import Path
 
 from utils.size import Size
 
