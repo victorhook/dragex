@@ -3,7 +3,7 @@ import tkinter as tk
 
 from engine import Controller
 from engine.event_queue import EventQueue, EventType
-from engine.screen import Screen
+from interfaces.screen import Screen
 from ui import basemodels
 from ui.examine import Examine
 from ui.renderer import Renderer

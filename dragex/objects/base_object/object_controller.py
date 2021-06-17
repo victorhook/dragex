@@ -3,7 +3,7 @@ from utils import Position, Grid, Settings, Orientation
 
 from engine.pathfinder import PathFinder, Path
 from engine.gridmap import GridMap
-from engine.object_state import ObjectState
+from .object_state import ObjectState
 
 
 Vec2 = namedtuple('Vec2', ['x', 'y'])

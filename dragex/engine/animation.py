@@ -3,7 +3,6 @@ from typing import Dict, List
 import time
 
 from engine.sprite import Sprite, NullSprite
-from engine.base_object import BaseObject
 
 
 Transition = namedtuple('Transition', ['sprite', 'duration'])
@@ -59,8 +58,7 @@ class SingleSpriteAnimation(Animation):
 
 class AnimationHandler:
 
-    def __init__(self, obj: BaseObject):
-        self._obj = obj
+    def __init__(self):
         self._animations: Dict[int, Animation] = {}
         self._curr_state = None
 

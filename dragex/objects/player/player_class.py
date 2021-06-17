@@ -1,11 +1,10 @@
-from engine.object_controllable import ControllableGameObject
-from engine.object_state import ObjectState
+from ..base_object import ObjectState, ControllableGameObject
 from engine.animation import Animation, Transition, AnimationHandler
-from engine.screen import Screen
+from interfaces.screen import Screen
 from engine.sprite import Sprite, SpriteCollection, SingleSprite
 
-from player.player_gear import PlayerGear
-from player.player_stats import PlayerStats
+from .player_gear import PlayerGear
+from .player_stats import PlayerStats
 
 
 def _get_sprite(state: int, gear: PlayerGear) -> Sprite:
@@ -44,15 +43,6 @@ class Player(ControllableGameObject):
             trinket
         """
         super().__init__(name, world_x=10, world_y=10, speed=5, **kwargs,)
-
-    def serialize(self):
-        return {
-            **super().serialize(),
-            'hp': self.hp,
-            'level': self.level,
-            'state': self.state,
-            'gear': self.gear,
-        }
 
     def load_sprites(self):
         _add_player_animations(self.state.get(), self.anim_handler, self.gear)

@@ -1,7 +1,7 @@
 import time
 from typing import List
 
-from engine.base_object import BaseObject
+from objects import BaseObject
 from utils import Singleton, Settings
 
 from server.server import Server

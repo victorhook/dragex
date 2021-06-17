@@ -1,8 +1,9 @@
-from engine.sprite import Sprite, EmptySprite, SingleSprite
-from engine.sprite_loader import SpriteLoader
-from engine.object_state import ObjectState
-from engine.drawable import Drawable
 from typing import Dict
+
+from ..base_object import ObjectState
+from engine.sprite import Sprite, EmptySprite, SingleSprite
+from loaders.sprite_loader import SpriteLoader
+from interfaces.drawable import Drawable
 
 
 class GearStats:

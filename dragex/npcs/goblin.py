@@ -1,5 +1,5 @@
-from engine.npc import Npc
-from engine.object_state import ObjectState
+from objects import Npc
+from objects import ObjectState
 from engine.animation import Animation, Transition, SingleSpriteAnimation
 from engine.sprite import SingleSprite
 from utils import Size

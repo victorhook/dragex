@@ -4,15 +4,15 @@ from client import DragexClient
 from engine.world import WorldLoader
 from engine.character import Character
 from engine.event_queue import EventQueue
-from engine.npc_factory import NpcFactory
+from factories.npc_factory import NpcFactory
 from engine.sprite import SingleSprite
 from engine.gridmap import GridMap
 from engine.pathfinder import PathFinder
-from engine.base_object import BaseObject
+from objects import BaseObject
 from engine.animation import Animation, AnimationHandler, Transition, SingleSpriteAnimation # noqa
-from engine.object_state import ObjectState
-from engine.npc import Npc
-from player import Player
+from objects import ObjectState
+from objects import Npc
+from objects import Player
 import npcs
 import utils
 from utils import Singleton, Settings, Size

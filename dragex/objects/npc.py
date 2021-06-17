@@ -1,4 +1,4 @@
-from engine.object_controllable import ControllableGameObject
+from objects import ControllableGameObject
 from engine.interact import (HostileNpcExamine, FriendlyNpcExamine, Action,
                              ExamineResponse)
 
@@ -18,16 +18,6 @@ class Npc(ControllableGameObject):
         self.aggresive = aggresive
         self._examine = (HostileNpcExamine() if hostile
                          else FriendlyNpcExamine())
-
-    def serialize(self):
-        return {
-            **super().serialize(),
-            'hp': self.hp,
-            'level': self.level,
-            'state': self.state,
-            'hostile': self.hostile,
-            'aggresive': self.aggresive,
-        }
 
     def interract(self, action: Action) -> None:
         print(f'Interract with {self.name}')

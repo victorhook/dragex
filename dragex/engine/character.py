@@ -1,9 +1,9 @@
-from engine.base_object import BaseObject
-from engine.screen import Screen
-from engine.object_controller import ObjectController
-from engine.object_controllable import ControllableGameObject
+from objects import BaseObject
+from interfaces.screen import Screen
+from objects import ObjectController
+from objects import ControllableGameObject
 
-from player import Player
+from objects import Player
 
 
 class Character(Player):

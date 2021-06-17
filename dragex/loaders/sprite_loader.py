@@ -1,6 +1,6 @@
 from utils import Singleton, Size
 from engine.sprite import Sprite, SingleSprite
-from engine.exceptions import NoSpriteExists
+from exceptions import NoSpriteExists
 
 from typing import Dict
 

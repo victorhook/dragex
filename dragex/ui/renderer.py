@@ -1,5 +1,5 @@
 from engine import Controller
-from engine.screen import Screen
+from interfaces.screen import Screen
 
 
 class Renderer:

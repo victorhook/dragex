@@ -1,8 +1,8 @@
-from engine.base_object import BaseObject
-from engine.object_controller import ObjectController
 from engine.animation import AnimationHandler
-from engine.object_state import ObjectState
 from engine import interact
+from .base_object_class import BaseObject
+from .object_controller import ObjectController
+from .object_state import ObjectState
 
 
 class Combat:
@@ -27,7 +27,7 @@ class ControllableGameObject(BaseObject):
                  ):
         super().__init__(name, description, **kwargs)
 
-        self.anim_handler = AnimationHandler(self)
+        self.anim_handler = AnimationHandler()
         self.state = ObjectState(self.anim_handler)
         self.ctrl = ObjectController(self.position, self.state, speed)
 

@@ -1,8 +1,8 @@
-from engine.npc import Npc
+from objects import Npc
 from engine.animation import Animation, Transition
 from engine.sprite import Sprite, SingleSprite
-from engine.object_state import ObjectState
-from engine.sprite_loader import SpriteLoader
+from objects import ObjectState
+from loaders.sprite_loader import SpriteLoader
 import npcs
 from utils import Singleton, AssetHandler
 
@@ -44,7 +44,7 @@ class NpcFactory:
                 sprite = NpcFactory._get_sprite(npc, sprite)
                 transitions.append(Transition(sprite, t_speed))
 
-            npc.anim_handler.add_animation(int_state, 
+            npc.anim_handler.add_animation(int_state,
                                            Animation(frames=transitions))
 
     def _set_size(npc: Npc, size: list) -> None:

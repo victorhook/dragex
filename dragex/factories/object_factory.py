@@ -1,7 +1,7 @@
-from engine.base_object import BaseObject
-from player import Player
-from engine.npc import Npc
-from engine.npc_factory import NpcFactory
+from objects import BaseObject
+from objects import Player
+from objects import Npc
+from factories.npc_factory import NpcFactory
 from npcs import Goblin
 import utils
 

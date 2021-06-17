@@ -1,6 +1,6 @@
 from utils import Singleton, AssetHandler
-from engine.base_object import BaseObject
-from engine.object_factory import ObjectFactory
+from objects import BaseObject
+from factories.object_factory import ObjectFactory
 
 from typing import List
 

@@ -1,15 +1,13 @@
 from typing import List
 
-import utils
-from engine.drawable import Drawable
+from interfaces import Drawable, Screen, GameObject
 from engine.interact import ExamineResponse, Action
 from engine.sprite import Sprite
-from engine.serialize import Serializable
-from engine.screen import Screen
+import utils
 from utils import Size, Position
 
 
-class BaseObject(Drawable, Serializable):
+class BaseObject(Drawable, GameObject):
 
     _obj_id = 0
 
@@ -68,16 +66,6 @@ class BaseObject(Drawable, Serializable):
             pass
 
         self._last_sprite = self.active_sprite
-
-    def serialize(self):
-        return {
-            'id': self.id,
-            'object_type': self.__class__.__name__,
-            'name': self.name,
-            'world_y': self.position.y,
-            'world_x': self.position.x,
-            'orientation': self.position.orientation,
-        }
 
     def interract(self, action: Action) -> None:
         """ Interracts with the object.

@@ -1,6 +1,6 @@
-from engine.drawable import Drawable
-from engine.screen import Screen
-from engine import gear
+from interfaces.drawable import Drawable
+from interfaces.screen import Screen
+from . import gear
 
 
 class PlayerGear(Drawable):

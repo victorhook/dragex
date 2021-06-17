@@ -2,9 +2,9 @@ from typing import List
 from PIL import ImageTk, Image
 from collections import namedtuple
 
-from engine.screen import Screen
-from engine.drawable import Drawable
-from engine.exceptions import NoSpriteExists
+from interfaces.screen import Screen
+from interfaces.drawable import Drawable
+from exceptions import NoSpriteExists
 
 from utils import AssetHandler, Size, Position
 from utils.position import Orientation
